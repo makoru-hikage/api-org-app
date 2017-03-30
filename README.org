@@ -1,5 +1,5 @@
 #+TITLE: API Org App
-#+AUTHOR: Zak B. Elep <zak.elep@yoyo-holdings.com>
+#+AUTHOR: Hidemasa Togashi <hidemasa.togashi@yoyo-holdings.com>
 
 API Org App is [[https://github.com/yoyo-holdings][YOYO]]'s technical test.  This is a standard web
 application that provides a simple organizer for the user to store notes
@@ -10,7 +10,7 @@ and TODOs.
   1. Fork this repository on your own personal GitHub account.
   2. Download your fork, build this app, and begin making changes.
   3. When finished, create a Pull Request to merge into YOYO's version,
-     then send an email to [[https://github.com/zakame][@zakame]] to let him know you're ready for
+     then send an email to [[https://github.com/htgc][@htgc]] to let him know you're ready for
      review.
   4. We will close the pull request.
 
