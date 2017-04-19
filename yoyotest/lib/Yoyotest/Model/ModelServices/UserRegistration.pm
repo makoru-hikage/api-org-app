@@ -11,7 +11,10 @@ sub get_valid_columns {
 
 sub register_user {
 	my $self = shift;
-	$self->{output_data} = $self->{repository}->create('User', $self->{input_data};
+
+	$self->{repository}->create($self->{input_data});
+	return $self->{input_data};
+
 }
 
 #"Statically" call this, no args required
