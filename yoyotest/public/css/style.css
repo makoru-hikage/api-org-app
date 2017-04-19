@@ -1,0 +1,66 @@
+# Empty CSS file for your own CSS
+
+body {
+	display: block;
+	overflow: auto;
+}
+
+.sidebar-list-item {
+	border: 1px solid #000;
+	margin: 5px;
+	padding: 10px;
+	height: 100%;
+}
+
+#top-header {
+	border: 1px solid #000;
+	margin: 5px;
+	padding: 10px;
+	width: 100%;
+	height: 100%;
+}
+
+#view-mode-buttons {
+	border: 1px solid #000;
+	margin: 5px;
+	padding: 10px;
+	width: 100%;
+	height: 100%;
+}
+
+#list-sidebar {
+	border: 1px solid #000;
+	margin: 5px;
+	padding: 10px;
+	width: 100%;
+	overflow: auto;
+}
+
+#text-title {
+	border: 1px solid #000;
+	margin: 5px;
+	padding: 10px;
+	width: 100%;
+	height: 100%;
+}
+
+#text-content {
+	border: 1px solid #000;
+	margin: 5px;
+	padding: 10px;
+	width: 100%;
+	height: 100%;
+}
+
+#text-commands {
+	border: 1px solid #000;
+	margin: 5px;
+	padding: 10px;
+	width: 100%;
+	height: 100%;
+}
+
+#textarea-content {
+	width: 100%;
+	height: 100%;
+}

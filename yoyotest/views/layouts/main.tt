@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="[% settings.charset %]">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>[% title %]</title>
+  <link rel="stylesheet" href="[% request.uri_base %]/css/style.css">
+  <link rel="stylesheet" href="[% request.uri_base %]/css/bootstrap.min.css">
+</head>
+<body>
+[% content %]
+<div id="footer">
+Powered by <a href="http://perldancer.org/">Dancer2</a> [% dancer_version %]
+</div>
+</body>
+<script type="text/javascript" src="[% request.uri_base %]/javascripts/bootstrap-native.min.js"></script>
+<script type="text/javascript" src="[% request.uri_base %]/javascripts/polyfill.min.js"></script>
+</html>
