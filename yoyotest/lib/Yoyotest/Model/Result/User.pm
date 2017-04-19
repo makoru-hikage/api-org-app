@@ -173,34 +173,9 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 user_roles
 
-Type: has_many
-
-Related object: L<Yoyotest::Model::Result::UserRole>
-
-=cut
-
-__PACKAGE__->has_many(
-  "user_roles",
-  "Yoyotest::Model::Result::UserRole",
-  { "foreign.user_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 roles
-
-Type: many_to_many
-
-Composing rels: L</user_roles> -> role
-
-=cut
-
-__PACKAGE__->many_to_many("roles", "user_roles", "role");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-04-18 21:05:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ObM+NEDrGPScvPHfwKKBQA
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-04-19 21:24:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sZRk8fKCm60ZQE6ydMX0ig
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

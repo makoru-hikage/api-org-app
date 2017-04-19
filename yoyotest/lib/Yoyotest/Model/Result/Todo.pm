@@ -42,6 +42,12 @@ __PACKAGE__->table("todos");
   is_auto_increment: 1
   is_nullable: 0
 
+=head2 task
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 50
+
 =head2 note_id
 
   data_type: 'integer'
@@ -91,6 +97,8 @@ __PACKAGE__->add_columns(
     is_auto_increment => 1,
     is_nullable => 0,
   },
+  "task",
+  { data_type => "varchar", is_nullable => 0, size => 50 },
   "note_id",
   {
     data_type => "integer",
@@ -168,8 +176,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-04-18 21:05:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eCZeP/27EtlmpX5IEVvBGg
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-04-19 21:24:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:afBpRfcL1a8sw0Ox0wFgmA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
