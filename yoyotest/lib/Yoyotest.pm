@@ -53,24 +53,10 @@ post '/login' => sub {
 
 };
 
-get '/todos' => sub {
-	#Determine the logged user
-	my $logged_username = session ('user');
-	my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
-	my $todo_maker = Yoyotest::Model::ModelServices::Todos->new($repository);
-
-	
-	my $todos = $todo_maker->set_user($logged_username)->get_todos->get_output_data;
-	my $test = $repository->first('username', 'cmoran');
-
-	return {data => ref $todos->all };
-};
-
-
 #user creation requires username and password
 resource 'users' =>
     'get'    => sub { 
-    	 
+    	 my $repository = Yoyotest::Model::Repository->new($schema, 'User');
     },
     'create' => sub { 
     	my $repository = Yoyotest::Model::Repository->new($schema, 'User');
@@ -84,13 +70,22 @@ resource 'users' =>
     	$deleted or send_error("Entity not found", 404); 
     },
     'update' => sub { 
-    	# update user with params->{user}       
+    	my $repository = Yoyotest::Model::Repository->new($schema, 'User');	      
     };
 
 #todo creation requires username, task, note_id, target_date, target_time
 resource 'todos' => 
     'get'    => sub { 
-    	# return user where id = params->{id}   
+	    #Determine the logged user
+		my $logged_username = session ('user');
+		my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
+		my $todo_maker = Yoyotest::Model::ModelServices::Todos->new($repository);
+
+		
+		my $todos = $todo_maker->set_user($logged_username)->get_todos->get_output_data;
+		my $test = $repository->first('username', 'cmoran');
+
+		return {data => ref $todos->all };  
     },
     'create' => sub { 
     	# create a new user with params->{user} 

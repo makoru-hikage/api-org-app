@@ -14,7 +14,7 @@ use strict;
 use warnings;
 
 use base 'DBIx::Class::Core';
-use 'DBIx::Class::TimeStamp';
+use DBIx::Class::TimeStamp;
 
 =head1 COMPONENTS LOADED
 
