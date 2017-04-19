@@ -80,7 +80,7 @@ sub delete {
 		{ is_deleted => 1 }
 	);
 
-	return $entity ? 'It is now deleted.' : 'It does not exist';
+	return $entity or "Delete success";
 }
 
 sub check_uniqueness {

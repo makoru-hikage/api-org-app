@@ -5,6 +5,7 @@ use warnings;
 use diagnostics;
 
 use parent 'Yoyotest::Model::ModelService';
+use parent 'Yoyotest::Model::ModelServices::OwnedByUserTrait';
 
 use Yoyotest::Model::ModelServices::Notes;
 
@@ -12,38 +13,30 @@ sub get_valid_columns {
 	return ('username', 'title', 'content', 'target_datetime');
 }
 
-sub set_user {
+sub set_note {
 	my $self = shift;
 	my $username = shift;
 
 	#If there is no argument for username, 
 	#get the one included in input_data
-	$username =  $self->{input_data}->{username} unless $username;
+	$note_id =  $self->{input_data}->{note_id} unless $note_id; 
 	
-	if ($username) {
-		#Get one row from database
-		$self->{user} = $self->{input_data}->{repository}->first('User', 'username', $username);
-
-		#If user does not exist...
-		unless ($self->{user}){
-			$self->set_exception_message(404, "User does not exist");
-		}
-	} else {
-		#Error shall be raised if there's no username provided
-		$self->set_exception_message(400, "Provide a username please") unless $username;
-	}
+	#Set the error code should the user not exist
+	$self->{note} = $self->{repository}->first('note_id', $note_id);
+	$self->{error_code} = 404 unless $self->{note};
 	
 	return $self;
 }
 
 sub create_note {
 	my $self = shift;
+
 	if ($self->{user}) {
 		my $note_maker = Yoyotest::Model::ModelServices::Notes->new( $self->{repository} );
 
 		$self->{note} = $note_maker
 			->set_input_data($self->{input_data})
-			->set_user($self->{user})
+			->set_user($self->{user}->username)
 			->write_note
 			->get_output_data;
 	}
@@ -53,9 +46,9 @@ sub create_note {
 
 sub create_todo {
 	my $self = shift;
+	my $note_and_user_exists = $self->{user} or $self->{note};
 
-	unless ($self->{errors}) {
-	
+	unless ( $self->{error_code} or not $note_and_user_exists ) {
 		$self->{input_data}->{user_id} = $self->{user}->{id};
 		$self->{input_data}->{note_id} = $self->{note}->{id};
 
@@ -64,27 +57,38 @@ sub create_todo {
 			->create('Todo', $self->{input_data});
 	}
 
+	$self->{output_data} = $self->{error_code};
 	return $self;
 }
 
 sub get_todos {
 	my $self = shift;
 
-	$self->{search_filter}->{ 'note.user_id' } = 1;
+	$self->{search_filter}->{ 'note.user_id' } = $self->{user}->{id};
 
 	my $attributes = {
-	
-		order_by => { -desc => 'note.created_at' },
-		prefetch => { 'note' => 'user' }
+		'select' => [
+			'todos.task', 
+			{ 'due_date' => 'TIME(todos.target_datetime)' }, 
+			'todos.is_done',
+			'todos.created_at'
+		],
+		'+select' => [
+			'notes.title',
+			'notes.content',
+			'notes.title',
+			'notes.created_at',
+			'users.username',
+		],
+		'order_by' => { -desc => 'note.created_at' },
+		'join' => { 'notes' => 'users' }
 	};
 
-	my $todos = $self->{repository}->first('username', 'cmoran');
-	#get('Todo', $self->{search_filter}, $attributes);
+	my $todos = $self->{repository}->get('Todo', $self->{search_filter}, $attributes);
 
-	$self->set_exception_message(404, "No Todos found") unless $todos;
+	$self->{error_code} = 404 unless $todos;
 
 	$self->{output_data} = $todos;
-
 	return $self;
 }
 

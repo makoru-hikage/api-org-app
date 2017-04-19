@@ -9,7 +9,7 @@ sub new {
 	my $repository = shift;
 	
 	$self->{repository} = $repository;
-	$self->{errors} = undef;
+	$self->{error_code} = 0;
 
 	bless ($self, $class);
 	return $self;
@@ -39,16 +39,6 @@ sub set_search_filter {
 sub get_search_filter {
 	my $self = shift;
 	return $self->{search_filter};
-}
-
-sub set_exception_message {
-	my $self = shift;
-	my $code = shift;
-	my $message = shift;
-
-	$self->{error}->{code} = $code;
-	$self->{error}->{message} = $message;
-	return $self;
 }
 
 sub get_output_data {

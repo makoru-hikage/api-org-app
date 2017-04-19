@@ -7,6 +7,7 @@ use Dancer2::Plugin::Auth::Extensible::Provider::Database ('authenticate_user');
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Passphrase;
 use Dancer2::Plugin::Ajax;
+use Dancer2::Plugin::REST;
 use Yoyotest::Model::Repository;
 use Yoyotest::Model::ModelServices::Todos;
 use Yoyotest::Model::ModelServices::Notes;
@@ -17,17 +18,7 @@ our $VERSION = '0.1';
 #Load the database connection
 my $schema = schema;
 
-sub get_logged_user {
-	my $logged_username = session ('user');
 
-	if ($logged_username){
-		return 0;
-	}
-
-	my $user_model = $schema->resultset('User');
-	my $user = $user_model->search({ username => $logged_username })->first;
-	return $user;
-}
 
 get '/' => sub {
 
@@ -56,48 +47,78 @@ post '/login' => sub {
 	#Hash the input password match against the one in DB
 	my $access_granted = passphrase($password)->matches($password_from_db);
 	
-	$access_granted or redirect $redir_url;
+	$access_granted or send_error("Unauthorized", 401);
 
 	session user => $username_from_db;
-	redirect $redir_url;
-};
 
-ajax '/notes' => sub {
-	#Determine the logged user
-	my $logged_username = session ('user');
-	my $user_model = $schema->resultset('User');
-	my $user = $user_model->search({ username => $logged_username })->first;
-
-	#Specifies what columns shall be used in query
-	#Also specifies how the records shall be sorted
-	my $attributes = {
-		order_by => { -desc => 'created_at' },
-		columns => [
-			'title',
-			'content',
-			'created_at',
-		],
-	}; 
-
-	#Run the query
-	my $notes = $user->search_related('notes', { is_deleted => 0}, %{ $attributes });
-
-	$notes or send_error("We have no notes", 404);
-
-    return @{ $notes };
 };
 
 get '/todos' => sub {
 	#Determine the logged user
 	my $logged_username = session ('user');
-	my $repository = $Yoyotest::Model::Repository->new ($schema, 'User');
-	my $todo_maker = $Yoyotest::Model::ModelServices::Todos->new ($repository);
+	my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
+	my $todo_maker = Yoyotest::Model::ModelServices::Todos->new($repository);
 
 	
-	my @todos = $todo_maker->set_user($logged_username)->get_todos->get_output_data;
+	my $todos = $todo_maker->set_user($logged_username)->get_todos->get_output_data;
 	my $test = $repository->first('username', 'cmoran');
 
-	return {data => Dumper $test };
+	return {data => ref $todos->all };
 };
+
+
+#user creation requires username and password
+resource 'users' =>
+    'get'    => sub { 
+    	 
+    },
+    'create' => sub { 
+    	my $repository = Yoyotest::Model::Repository->new($schema, 'User');
+		my $user_maker = Yoyotest::Model::ModelServices::Users->new ($repository);
+
+		$user_maker->set_input_data( params )->register_user->get_output_data;
+    },
+    'delete' => sub { 
+    	my $repository = Yoyotest::Model::Repository->new($schema, 'User');
+    	$deleted = $repository->delete('id', params->{id});
+    	$deleted or send_error("Entity not found", 404); 
+    },
+    'update' => sub { 
+    	# update user with params->{user}       
+    };
+
+#todo creation requires username, task, note_id, target_date, target_time
+resource 'todos' => 
+    'get'    => sub { 
+    	# return user where id = params->{id}   
+    },
+    'create' => sub { 
+    	# create a new user with params->{user} 
+    },
+    'delete' => sub { 
+    	my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
+    	$deleted = $repository->delete('id', params->{id});
+    	$deleted or send_error("Entity not found", 404);  
+    },
+    'update' => sub { 
+    	# update user with params->{user}       
+    };
+
+#todo creation requires username, title, content
+resource 'notes' =>
+    'get'    => sub { 
+    	# return user where id = params->{id}   
+    },
+    'create' => sub { 
+    	# create a new user with params->{user} 
+    },
+    'delete' => sub { 
+    	my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
+    	$deleted = $repository->delete('id', params->{id});
+    	$deleted or send_error("Entity not found", 404);    
+    },
+    'update' => sub { 
+    	# update user with params->{user}       
+    };
 
 true;

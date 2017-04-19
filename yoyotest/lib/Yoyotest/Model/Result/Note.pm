@@ -14,6 +14,7 @@ use strict;
 use warnings;
 
 use base 'DBIx::Class::Core';
+use 'DBIx::Class::TimeStamp';
 
 =head1 COMPONENTS LOADED
 
@@ -107,6 +108,8 @@ __PACKAGE__->add_columns(
     datetime_undef_if_invalid => 1,
     default_value => "CURRENT_TIMESTAMP",
     is_nullable => 1,
+    set_on_create => 1,
+    set_on_update => 1,
   },
   "updated_at",
   {
@@ -114,6 +117,8 @@ __PACKAGE__->add_columns(
     datetime_undef_if_invalid => 1,
     default_value => "CURRENT_TIMESTAMP",
     is_nullable => 1,
+    set_on_create => 1,
+    set_on_update => 1,
   },
   "is_deleted",
   { data_type => "tinyint", default_value => 0, is_nullable => 1 },

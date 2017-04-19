@@ -12,9 +12,10 @@ sub get_valid_columns {
 sub register_user {
 	my $self = shift;
 
-	$self->{repository}->create($self->{input_data});
-	return $self->{input_data};
-
+	$user = $self->{repository}->create($self->{input_data});
+	$self->{error_code} = 404 unless $user
+	$self->{output_data} = $user ? "User created!" : $self->{error_code};
+	return $self;
 }
 
 #"Statically" call this, no args required
