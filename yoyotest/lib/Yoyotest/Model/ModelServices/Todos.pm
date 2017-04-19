@@ -15,7 +15,7 @@ sub get_valid_columns {
 
 sub set_note {
 	my $self = shift;
-	my $username = shift;
+	my $note_id = shift;
 
 	#If there is no argument for username, 
 	#get the one included in input_data
@@ -46,7 +46,7 @@ sub create_note {
 
 sub create_todo {
 	my $self = shift;
-	my $note_and_user_exists = $self->{user} or $self->{note};
+	my $note_and_user_exists = exists $self->{user} and exists $self->{note};
 
 	unless ( $self->{error_code} or not $note_and_user_exists ) {
 		$self->{input_data}->{user_id} = $self->{user}->{id};

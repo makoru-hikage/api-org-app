@@ -66,7 +66,7 @@ resource 'users' =>
     },
     'delete' => sub { 
     	my $repository = Yoyotest::Model::Repository->new($schema, 'User');
-    	$deleted = $repository->delete('id', params->{id});
+    	my $deleted = $repository->delete('id', params->{id});
     	$deleted or send_error("Entity not found", 404); 
     },
     'update' => sub { 
@@ -92,7 +92,7 @@ resource 'todos' =>
     },
     'delete' => sub { 
     	my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
-    	$deleted = $repository->delete('id', params->{id});
+    	my $deleted = $repository->delete('id', params->{id});
     	$deleted or send_error("Entity not found", 404);  
     },
     'update' => sub { 
@@ -109,7 +109,7 @@ resource 'notes' =>
     },
     'delete' => sub { 
     	my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
-    	$deleted = $repository->delete('id', params->{id});
+    	my $deleted = $repository->delete('id', params->{id});
     	$deleted or send_error("Entity not found", 404);    
     },
     'update' => sub { 

@@ -80,7 +80,7 @@ sub delete {
 		{ is_deleted => 1 }
 	);
 
-	return $entity or "Delete success";
+	return $entity ? "Delete success" : 0;
 }
 
 sub check_uniqueness {
@@ -88,7 +88,7 @@ sub check_uniqueness {
 	my $column = shift;
 	my $value = shift;
 
-	return $self->first($unique_column, $value);
+	return $self->first($column, $value);
 }
 
 1;

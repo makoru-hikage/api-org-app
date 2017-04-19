@@ -19,3 +19,5 @@ sub set_user {
 	
 	return $self;
 }
+
+1;
