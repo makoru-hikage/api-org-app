@@ -35,7 +35,8 @@ sub get {
 
 	return $self
 		->{entity}
-		->search($search_filters, $attributes);
+		->search($search_filters, $attributes)
+		->all;
 }
 
 sub create {
@@ -80,6 +81,14 @@ sub delete {
 	);
 
 	return $entity ? 'It is now deleted.' : 'It does not exist';
+}
+
+sub check_uniqueness {
+	my $self = shift;
+	my $column = shift;
+	my $value = shift;
+
+	return $self->first($unique_column, $value);
 }
 
 1;
