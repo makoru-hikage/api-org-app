@@ -2,65 +2,190 @@
 
 body {
 	display: block;
+	overflow: hidden;
+	height: 100%;
+}
+
+/*=*/
+
+#first-row {
+	position: relative;
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	height: 85px;
+	width: 500;
+	
+}
+
+/*==*/
+
+#top-header {
+
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	width: 68%;
+	height: 100%;
+}
+
+/*===*/
+#view-title {
+	display: inline;
+	vertical-align: middle;
+}
+
+#view-mode-panel {
+	display: inline;
+	position: relative;
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	width: 30%;
+	height: 100%;
+}
+
+#view-mode-btns {
+	display: inline-block;
+}
+
+/*=*/
+
+#second-row {
+	position: relative;
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	height: 500px;
+	width: 500;
+}
+
+/*==*/
+
+#content-panel {
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	height: 100%;
+	width: 68%;
+}
+
+/*===*/
+
+#content-panel-header {
+	position: relative;
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	height: 20%;
+	width: 100%; 
+}
+
+/*====*/
+
+#text-title {
+
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	width: 67%;
+	height: 100%;
+	display: inline;
+}
+
+#text-commands {
+
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	width: 30%;
+	height: 100%;
+	vertical-align: middle;
+}
+
+/*=====*/
+
+#edit-save-btns {
+	position: relative;
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	width: 100%;
+	height: 100%;
+	vertical-align: middle;
+}
+
+#cancel-revert-btns {
+	position: relative;
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	width: 40%;
+	height: 100%;
+	vertical-align: middle;
+}
+
+/*===*/
+
+#text-content {
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	width: 100%;
+	height: 78%;
+}
+
+/*====*/
+
+#textarea-content {
+	position: relative;
+	margin: 2px auto;
+	padding: 15px;
+	width: 100%;
+	height: 100%;
+}
+
+
+/*==*/
+
+#sidebar-panel {
+	position: relative;
+	height: 100%;
+	width: 30%;
+}
+
+/*===*/
+
+#list-sidebar {
+	position: relative;
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 15px;
+	width: 100%;
+	height: 100%;
 	overflow: auto;
 }
 
 .sidebar-list-item {
+	position: relative;
 	border: 1px solid #000;
-	margin: 5px;
-	padding: 10px;
+	margin: 2px auto;
+	padding: 15px;
 	height: 100%;
+	width: 100%;
+	max-width: 100%;
 }
 
-#top-header {
+.list-item-info {
+	position: relative;
 	border: 1px solid #000;
-	margin: 5px;
-	padding: 10px;
-	width: 100%;
-	height: 100%;
+	margin: 2px auto;
+	padding: 15px;
 }
 
-#view-mode-buttons {
+.list-item-check {
+	position: relative;
 	border: 1px solid #000;
-	margin: 5px;
-	padding: 10px;
-	width: 100%;
-	height: 100%;
-}
-
-#list-sidebar {
-	border: 1px solid #000;
-	margin: 5px;
-	padding: 10px;
-	width: 100%;
-	overflow: auto;
-}
-
-#text-title {
-	border: 1px solid #000;
-	margin: 5px;
-	padding: 10px;
-	width: 100%;
-	height: 100%;
-}
-
-#text-content {
-	border: 1px solid #000;
-	margin: 5px;
-	padding: 10px;
-	width: 100%;
-	height: 100%;
-}
-
-#text-commands {
-	border: 1px solid #000;
-	margin: 5px;
-	padding: 10px;
-	width: 100%;
-	height: 100%;
-}
-
-#textarea-content {
-	width: 100%;
-	height: 100%;
+	margin: 2px auto;
+	padding: 15px;
 }
