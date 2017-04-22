@@ -23,7 +23,7 @@ sub first {
 
 	my $entity = $self
 		->{entity}
-		->search ({ $unique_column => $value })
+		->search ({ $unique_column => $value, is_deleted => 0 })
 		->first;
 
 }
