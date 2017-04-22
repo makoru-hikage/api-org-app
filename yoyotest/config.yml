@@ -28,8 +28,6 @@ engines:
       end_tag:   '%]'
       WRAPPER: layouts/main
 
-serializer: JSON
-
 # session engine
 #
 # Simple: in-memory session store - Dancer2::Session::Simple
