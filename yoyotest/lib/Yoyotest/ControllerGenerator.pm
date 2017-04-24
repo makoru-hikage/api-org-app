@@ -50,9 +50,14 @@ sub repository_create {
 	my $repo = $self->{repo};
 
 	return sub {
+		send_error("Set your repository, developer.", 500) unless $repo;
+
+		#It forces the client to send a body with such "input_data" item
+		#Such thing is an object of key-value pairs
 		my $input_data = from_json(request->body)->{input_data};
 
 		$create_success = $self->{repository}->create($input_data);
+
 		send_error ("Unsuccessful", 422) unless $create_success; 
 		send_as JSON => $create_success, 
 			{ content_type => 'application/json; charset=UTF-8' };
@@ -65,10 +70,13 @@ sub repository_update {
 	my $repo = $self->{repo};
 
 	return sub {
+		send_error("Set your repository, developer.", 500) unless $repo;
+
 		my $value = param 'id';
 		my $input_data = from_json(request->body)->{input_data};
 
 		$update_success = $repo->update($unique_column, $value, $input_data);
+
 		send_error ("Not found", 404) unless $update_success; 
 		send_as JSON => $update_success, 
 			{ content_type => 'application/json; charset=UTF-8' };
@@ -78,11 +86,17 @@ sub repository_update {
 sub repository_get {
 	my $self = shift;
 	my $attributes = shift;
+	my $repo = $self->{repo};
 
 	return sub {
+		send_error("Set your repository, developer.", 500) unless $repo;
+
+		#It forces the client to send a body with such "search_filter" item
+		#Such thing is an object of key-value pairs
 		my $search_filters= from_json(request->body)->{search_filter};
 		
 		$data = $repo->get($search_filters, $attributes);
+
 		send_error ("Not found", 404) unless $data; 
 		send_as JSON => $data, { content_type => 'application/json; charset=UTF-8' };
 	};
@@ -94,9 +108,12 @@ sub repository_delete {
 	my $repo = $self->{repo};
 
 	return sub {
+		send_error("Set your repository, developer.", 500) unless $repo;
+
 		my $value = param 'id'; 
 
 		$entity = $repo->delete($unique_column, $value);
+
 		send_error ("It does not exist", 404) unless $entity;
 		send_as JSON => $entity, 
 			{ content_type => 'application/json; charset=UTF-8' };
@@ -109,9 +126,12 @@ sub repository_first {
 	my $repo = $self->{repo};
 
 	return sub {
+		send_error("Set your repository, developer.", 500) unless $repo;
+		
 		my $value = param 'id';
 
 		$entity = $repo->first($unique_column, $value);
+
 		send_error ("It does not exist", 404) unless $entity;
 		send_as JSON => $entity, 
 			{ content_type => 'application/json; charset=UTF-8' };
