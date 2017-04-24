@@ -20,14 +20,26 @@ charset: "UTF-8"
 
 template: template_toolkit
 
-# template: "template_toolkit"
+session: Cookie
+
 engines:
   template:
     template_toolkit:
       start_tag: '[%'
       end_tag:   '%]'
       WRAPPER: layouts/main
+  session:
+    Cookie:
+      secret_key:           idonotknowifthisisasecret
+      default_duration:     604800
+      with_request_address: 0
 
+plugins:
+    Passphrase:
+        algorithm: Bcrypt
+ 
+        Bcrypt:
+            cost: 4
 # session engine
 #
 # Simple: in-memory session store - Dancer2::Session::Simple
@@ -52,10 +64,6 @@ engines:
 #      is_secure: 1
 #      is_http_only: 1
 #      
-session: Cookie
-engines:
-  session:
-    Cookie:
-      secret_key:           idonotknowifthisisasecret
-      default_duration:     604800
-      with_request_address: 0
+
+
+  

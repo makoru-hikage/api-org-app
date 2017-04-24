@@ -6,9 +6,9 @@ use Yoyotest::Model;
 use Dancer2::Plugin::Auth::Extensible::Provider::Database ('authenticate_user');
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Passphrase;
-use Dancer2::Plugin::Ajax;
+use DBIx::Class::ResultClass::HashRefInflator;
 use Dancer2::Plugin::REST;
-use Yoyotest::Model::Repository;
+
 use Yoyotest::Model::ModelServices::Todos;
 use Yoyotest::Model::ModelServices::Notes;
 use Data::Dumper;
@@ -22,21 +22,18 @@ my $schema = schema;
 
 get '/' => sub {
 
-	#If no one is logged in, redirect to login page
-	#redirect '/login' unless session('user');
 	#Load the template
-    template index => { 'title' => 'yoyotest' };
+    template index => { title => 'yoyotest' };
 
 };
 
 post '/login' => sub {
 
+	send_as JSON => { message => "Still logged in"} if session('user');
+
 	#Get all the params from HTTP request
 	my $username  = param 'username';
 	my $password  = param 'password';
-
-	#Extract requested resource if there is, else it's just login
-	my $redir_url = param 'redirect_url' || '/login';
 
 	#Find and load the user's data from database by username 
 	my $user_model = $schema->resultset('User');
@@ -47,73 +44,58 @@ post '/login' => sub {
 	#Hash the input password match against the one in DB
 	my $access_granted = passphrase($password)->matches($password_from_db);
 	
-	$access_granted or send_error("Unauthorized", 401);
+	send_error("Unauthorized! Wrong username and/or password", 401) unless $access_granted;
 
 	session user => $username_from_db;
+	send_as JSON => { message => "You are now logged in as ". session('user')};
 
 };
 
-#user creation requires username and password
-resource 'users' =>
-    'get'    => sub { 
-    	 my $repository = Yoyotest::Model::Repository->new($schema, 'User');
-    },
-    'create' => sub { 
-    	my $repository = Yoyotest::Model::Repository->new($schema, 'User');
-		my $user_maker = Yoyotest::Model::ModelServices::Users->new ($repository);
+any '/logout' => sub {
 
-		$user_maker->set_input_data( params )->register_user->get_output_data;
-    },
-    'delete' => sub { 
-    	my $repository = Yoyotest::Model::Repository->new($schema, 'User');
-    	my $deleted = $repository->delete('id', params->{id});
-    	$deleted or send_error("Entity not found", 404); 
-    },
-    'update' => sub { 
-    	my $repository = Yoyotest::Model::Repository->new($schema, 'User');	      
-    };
+	session user => undef;
+	send_as JSON => { message => "You are now logged out."};
 
-#todo creation requires username, task, note_id, target_date, target_time
-resource 'todos' => 
-    'get'    => sub { 
-	    #Determine the logged user
-		my $logged_username = session ('user');
-		my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
-		my $todo_maker = Yoyotest::Model::ModelServices::Todos->new($repository);
+};
 
-		
-		my $todos = $todo_maker->set_user($logged_username)->get_todos->get_output_data;
-		my $test = $repository->first('username', 'cmoran');
+get '/notes' => sub { 
+		my $username = session('user');
+		send_error("Please login first.", 401) unless $username;
 
-		return {data => ref $todos->all };  
-    },
-    'create' => sub { 
-    	# create a new user with params->{user} 
-    },
-    'delete' => sub { 
-    	my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
-    	my $deleted = $repository->delete('id', params->{id});
-    	$deleted or send_error("Entity not found", 404);  
-    },
-    'update' => sub { 
-    	# update user with params->{user}       
-    };
+		my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
 
-#todo creation requires username, title, content
-resource 'notes' =>
-    'get'    => sub { 
-    	# return user where id = params->{id}   
-    },
-    'create' => sub { 
-    	# create a new user with params->{user} 
-    },
-    'delete' => sub { 
-    	my $repository = Yoyotest::Model::Repository->new($schema, 'Todo');
-    	my $deleted = $repository->delete('id', params->{id});
-    	$deleted or send_error("Entity not found", 404);    
-    },
-    'update' => sub { 
-    	# update user with params->{user}       
-    };
+		my $notes = Yoyotest::Model::ModelServices::Notes
+		->new($schema)
+	 	->set_search_filter($search_filter)
+	 	->set_user($username)
+	 	->get_notes
+	 	->get_output_data;
+
+		send_as JSON => $notes, 
+			{ content_type => 'application/json; charset=UTF-8' };
+};
+
+
+
+get '/test/:id' => sub {
+	my $id = route_parameters->{id};
+	my $input_data = from_json(request->body)->{input_data};
+	my $search_filter = from_json(request->body)->{search_filter};
+
+	my $data = {
+		id => $id,
+		input => $input_data,
+		filter => $search_filter,
+	};
+
+	send_as JSON => $data , { content_type => 'application/json; charset=UTF-8' };
+};
+
+get '/hash_pass/:pass' => sub {
+	my $passwd = param 'pass';
+	send_as JSON => {
+			passwd => passphrase( $passwd )->generate->rfc2307} , 
+			{ content_type => 'application/json; charset=UTF-8' };
+};
 
 true;
