@@ -5,6 +5,8 @@ use warnings;
 
 use parent 'Yoyotest::Model::ModelService';
 
+my $entity_name = 'User';
+
 sub get_valid_columns {
 	return ('username', 'email', 'first_name', 'last_name');
 }

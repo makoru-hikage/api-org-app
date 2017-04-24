@@ -9,9 +9,19 @@ sub new {
 	my $schema_connection = shift;
 	my $entity_name = shift;
 	
-	$self->{entity} = $schema_connection->resultset($entity_name);
+	$self->{schema} = $schema_connection;
+	$self->{entity} = $self->{schema}->resultset($entity_name);
 
 	bless ($self, $class);
+	return $self;
+}
+
+sub change_entity {
+	my $self = shift;
+	my $entity_name = shift;
+
+	$self->{entity} = $self->{schema}->resultset($entity_name);
+
 	return $self;
 }
 
@@ -33,10 +43,19 @@ sub get {
 	my $search_filters = shift;
 	my $attributes = shift;
 
-	return $self
+	my $resultset = $self
 		->{entity}
-		->search($search_filters, $attributes)
-		->all;
+		->search($search_filters, $attributes);
+
+	$resultset->result_class('DBIx::Class::ResultClass::HashRefInflator');
+
+	my $data = {data=>[]};
+
+	while (my $row = $resultset->next() ) {
+	    push @{$data->{data}}, $row;
+	}
+
+	return $data;
 }
 
 sub create {

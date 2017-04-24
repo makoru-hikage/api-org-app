@@ -8,6 +8,7 @@ use strict;
 sub set_user {
 	my $self = shift;
 	my $username = shift;
+	$self->{repository}->change_entity('User');
 
 	#If there is no argument for username, 
 	#get the one included in input_data
