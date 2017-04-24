@@ -27,6 +27,16 @@ get '/' => sub {
 
 };
 
+hook init_error => sub {
+    my $error = shift;
+    status $error->status;
+    
+    send_as JSON => { 
+    	message => $error->message,
+    	status => $error->status,
+    }, { content_type => 'application/json; charset=UTF-8' };
+};
+
 post '/login' => sub {
 
 	send_as JSON => { message => "Still logged in"} if session('user');
@@ -47,14 +57,16 @@ post '/login' => sub {
 	send_error("Unauthorized! Wrong username and/or password", 401) unless $access_granted;
 
 	session user => $username_from_db;
-	send_as JSON => { message => "You are now logged in as ". session('user')};
+	send_as JSON => { message => "You are now logged in as ". session('user')},
+		{ content_type => 'application/json; charset=UTF-8' };
 
 };
 
 any '/logout' => sub {
 
 	session user => undef;
-	send_as JSON => { message => "You are now logged out."};
+	send_as JSON => { message => "You are now logged out."},
+		{ content_type => 'application/json; charset=UTF-8' };
 
 };
 
