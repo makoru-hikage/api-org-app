@@ -1,17 +1,12 @@
 package Yoyotest;
 
 use Dancer2;
-use Yoyotest::Model;
 
-use Dancer2::Plugin::Auth::Extensible::Provider::Database ('authenticate_user');
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Passphrase;
 use DBIx::Class::ResultClass::HashRefInflator;
-use Dancer2::Plugin::REST;
-
 use Yoyotest::Model::ModelServices::Todos;
 use Yoyotest::Model::ModelServices::Notes;
-use Data::Dumper;
 
 our $VERSION = '0.1';
 
@@ -77,16 +72,33 @@ get '/notes' => sub {
 		my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
 
 		my $notes = Yoyotest::Model::ModelServices::Notes
-		->new($schema)
-	 	->set_search_filter($search_filter)
-	 	->set_user($username)
-	 	->get_notes
-	 	->get_output_data;
+			->new($schema)
+		 	->set_search_filter($search_filter)
+		 	->set_user($username)
+		 	->get_notes
+		 	->get_output_data;
 
 		send_as JSON => $notes, 
 			{ content_type => 'application/json; charset=UTF-8' };
 };
 
+
+get '/todos' => sub { 
+		my $username = session('user');
+		send_error("Please login first.", 401) unless $username;
+
+		my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
+
+		my $todos = Yoyotest::Model::ModelServices::Todos
+			->new($schema)
+			->set_search_filter($search_filter)
+			->set_user($username)
+			->get_todos
+			->get_output_data;
+
+		send_as JSON => $todos, 
+			{ content_type => 'application/json; charset=UTF-8' };
+};
 
 
 get '/test/:id' => sub {
