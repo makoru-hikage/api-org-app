@@ -27,7 +27,8 @@ engines:
     template_toolkit:
       start_tag: '[%'
       end_tag:   '%]'
-      WRAPPER: layouts/main
+      WRAPPER: layouts/main.tt
+
   session:
     Cookie:
       secret_key:           idonotknowifthisisasecret
@@ -63,7 +64,3 @@ plugins:
 #      cookie_name: eshop.session
 #      is_secure: 1
 #      is_http_only: 1
-#      
-
-
-  
