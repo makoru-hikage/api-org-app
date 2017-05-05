@@ -22,32 +22,34 @@ use Yoyotest::Model::ModelServices::Notes;
 # NOTE_1: optional if $username is already in $input_data
 # 
 # Convert a note into todo: 
-# 	new($repository)
+# 	new($schema)
 # 	->set_input_data($input_data)
-# 	->set_user($username) #NOTE_1
 # 	->set_note($id_value)
 # 	->create_todo
 # 	->get_output_data;
 # 	
-# NOTE_1: optional if $username is already in $input_data
-# 	
 # Get specific notes
-#	 new($repository)
+#	 new($schema)
 #	  ->set_search_filter($search_filter)
 #	  ->set_user($username) #NOTE_1
-#	  ->get_notes
+#	  ->get_todos
 #	  ->get_output_data;
 #
-# NOTE_1: Not needed when accessing own notes
+# NOTE_1: Not needed when accessing own todos
 # 
-# Update a note
-# 	new($repository)
+# Update a todo
+# 	new($schema)
+# 	  ->set_search_filter($search_filter)
 #	  ->set_input_data($input_data)
-#	  ->set_user($username)
 #	  ->edit_note($id_value)
 #	  ->get_output_data;
+#	  
+# Convert todo into a note 
+# 	new($schema)
+#	  ->set_search_filter($search_filter)
+#	  ->convert_into_note()
+#	  ->get_output_data;  
 
-my $entity_name = 'Todo';
 
 my $valid_input_columns = [
 	'users.username', 
@@ -55,6 +57,10 @@ my $valid_input_columns = [
 	'notes.content', 
 	'todos.target_datetime'
 ];
+
+sub get_entity_name {
+	return 'Todo';
+}
 
 sub set_note {
 	my $self = shift;
@@ -66,14 +72,13 @@ sub set_note {
 	
 	#Set the error code should the note not exist
 	$self->{note} = $self->{repository}->first('id', $note_id);
-	$self->{error_code} = 404 unless $self->{note};
 	
 	return $self;
 }
 
 sub write_note {
 	my $self = shift;
-	$self->{repo}->change_entity('Todo');
+	$self->{repository}->change_entity('Note');
 
 	if ($self->{user}) {
 		my $note_maker = Yoyotest::Model::ModelServices::Notes->new( $self->{repository} );
@@ -90,10 +95,10 @@ sub write_note {
 
 sub create_todo {
 	my $self = shift;
-	$self->{repo}->change_entity('Todo');
+	$self->{repository}->change_entity('Todo');
 	my $note_and_user_exists = exists $self->{user} and exists $self->{note};
 
-	unless ( $self->{error_code} or not $note_and_user_exists ) {
+	if ( $note_and_user_exists ) {
 		$self->{input_data}->{user_id} = $self->{user}->{id};
 		$self->{input_data}->{note_id} = $self->{note}->{id};
 
@@ -102,28 +107,27 @@ sub create_todo {
 			->create('Todo', $self->{input_data});
 	}
 
-	$self->{output_data} = $self->{error_code};
 	return $self;
 }
 
 sub get_todos {
 	my $self = shift;
-	$self->{repo}->change_entity('Todo');
-
-	$self->{search_filter}->{ 'note.user_id' } = $self->{user}->id;
+	$self->{repository}->change_entity('Todo');
 
 	my $attributes = {
 		'select' => [
+			'id',
 			'task', 
 			'target_datetime', 
 			'is_done',
 			'created_at',
-			'notes.title',
-			'notes.content',
-			'notes.created_at',
-			'users.username',
+			'note.title',
+			'note.content',
+			'note.created_at',
+			'user.username',
 		],
 		'as' => [
+			'id',
 			'task', 
 			'due_time', 
 			'is_done',
@@ -133,16 +137,20 @@ sub get_todos {
 			'creation_time',
 			'username',
 		],
-		'order_by' => { -desc => 'note.created_at' },
-		'join' => { 'notes' => 'users' }
+		'order_by' => { -desc => 'me.created_at' },
+		'join' => { 'note' => 'user' }
 	};
 
-	my $todos = $self->{repository}->get('Todo', $self->{search_filter}, $attributes);
+	$self->{search_filter}->{'note.user_id'} = $self->{user}->id;
 
-	$self->{error_code} = 404 unless $todos;
+	my $todos = $self->{repository}->get($self->{search_filter}, $attributes);
 
 	$self->{output_data} = $todos;
 	return $self;
+}
+
+sub convert_into_note {
+
 }
 
 1;
