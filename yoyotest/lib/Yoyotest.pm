@@ -22,17 +22,24 @@ get '/' => sub {
 
 };
 
-hook init_error => sub {
-    my $error = shift;
-    status $error->status;
+#What happens after send_error is invoked.
+# hook init_error => sub {
+#     my $error = shift;
+#     status $error->status;
     
-    send_as JSON => { 
-    	message => $error->message,
-    	status => $error->status,
-    }, { content_type => 'application/json; charset=UTF-8' };
+#     send_as JSON => { 
+#     	message => $error->message,
+#     	status => $error->status,
+#     }, { content_type => 'application/json; charset=UTF-8' };
+# };
+
+my $check_user = sub {
+	my $username = session('user');
+	send_error("Please login first.", 401) unless $username;
 };
 
-post '/login' => sub {
+#A simple login using cookie sessions. See config.yml
+any ['put', 'post'] => '/login' => sub {
 
 	send_as JSON => { message => "Still logged in"} if session('user');
 
@@ -57,6 +64,7 @@ post '/login' => sub {
 
 };
 
+#You see that right, any, any method.
 any '/logout' => sub {
 
 	session user => undef;
@@ -66,8 +74,8 @@ any '/logout' => sub {
 };
 
 get '/notes' => sub { 
+		$check_user->();
 		my $username = session('user');
-		send_error("Please login first.", 401) unless $username;
 
 		my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
 
@@ -84,20 +92,20 @@ get '/notes' => sub {
 
 
 get '/todos' => sub { 
-		my $username = session('user');
-		send_error("Please login first.", 401) unless $username;
+	my $username = session('user');
+	send_error("Please login first.", 401) unless $username;
 
-		my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
+	my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
 
-		my $todos = Yoyotest::Model::ModelServices::Todos
-			->new($schema)
-			->set_search_filter($search_filter)
-			->set_user($username)
-			->get_todos
-			->get_output_data;
+	my $todos = Yoyotest::Model::ModelServices::Todos
+		->new($schema)
+		->set_search_filter($search_filter)
+		->set_user($username)
+		->get_todos
+		->get_output_data;
 
-		send_as JSON => $todos, 
-			{ content_type => 'application/json; charset=UTF-8' };
+	send_as JSON => $todos, 
+		{ content_type => 'application/json; charset=UTF-8' };
 };
 
 
