@@ -1,23 +1,22 @@
 
-<body>
    	<div class="container-fluid">
 		<!-- THE MAIN HEADER SECTION -->
 		<div class="row" id="first-row">
 			<!-- TITLE -->
 			<div class="col-md-8 col-xs-12" id="top-header">
 				<h2 id="view-title">
-					Notes
+					Ｎ Ｏ Ｔ Ｅ Ｓ
 				</h2>
 			</div>
 			<!-- MODE BUTTONS -->
-			<div class="col-md-4 col-xs-12" id="view-mode-panel">
+			<div class="col-md-4 col-xs-12 header" id="view-mode-panel">
 				<div class="btn-group pull-right" id="view-mode-btns">
-					<label class="btn btn-primary active">
-						Notes
-					</label>
-					<label class="btn btn-primary">
-						To Do's
-					</label>
+					<button class=" active">
+						Ｎ Ｏ Ｔ Ｅ Ｓ
+					</button>
+					<button class="">
+						Ｔ Ｏ Ｄ Ｏ Ｓ
+					</button>
 				</div>
 			</div>
 		</div>
@@ -26,45 +25,56 @@
 	<div class="container-fluid">
 		<div class="row" id="second-row">
 			<!-- THE CONTENT PANEL -->
-			<div class="col-md-8 col-xs-12" id="content-panel">
+			<div class="col-md-8 col-xs-12 window" id="content-panel">
 				<!-- THE CONTENT PANEL HEADER SECTION -->
-				<div class="row" id="content-panel-header">
 
-					<div class="col-md-7 col-xs-12" id="text-title">	
-						<h4>Placeholder, the Title of None</h4>
-					</div>
-
-					<div class="col-md-5 col-xs-12" id="text-commands">
-						<label class="btn btn-primary">
-							Cancel
-						</label>
-						<label class="btn btn-primary">
-							Save
-						</label>
-					</div>
+				<div class="row header" id="content-panel-header">
+				<img class='icon' src='/images/icons/txt.gif' srcset='/images/icons/txt@2x.gif 32w, /images/icons/txt@4x.gif 64w' />
+					<span>Placeholder, the Title of None</span>
 				</div>
+				<ul class="toolbar">
+				    <li><u>F</u>ile</li>
+				    <li><u>E</u>dit</li>
+				    <li><u>V</u>iew</li>
+				    <li><u>H</u>elp</li>
+				</ul>
 
-				<div id="text-content">
+
 					<textarea id="textarea-content"></textarea>
-				</div>
+
 			</div>
 				<!-- THE LIST SIDEBAR -->
 			<div class="col-md-4 col-xs-12" id="sidebar-panel">
-				<nav id="list-sidebar">
-					<ul class="sidebar-list nav navbar-nav">
-						<li class="sidebar-list-item">
-							<div class="row">
-								<div class="col-md-6">
-									<div class="list-item-info"></div>
-								</div>
-								<div class="col-md-6">
-									<div class="list-item-check"></div>
-								</div>
-							</div>
-						</li>
-					</ul>
-				</nav>
+				<ul class="sidebar-list-items nav navbar-nav">
+					<li class="sidebar-list-item">
+						
+						<div class="col-md-10 list-item-info">
+							<span class="list-item-title">I'm the title</span> 
+							<span class="list-item-sub">I'm the sub</span> 
+						</div>
+						<div class="col-md-2 list-item-check">
+							<div class="item-is-done">OK</div>
+						</div>
+						
+					</li>
+					<li class="sidebar-list-item">
+						<div class="col-md-10 list-item-info">
+							<span class="list-item-title">I'm the title</span> 
+							<span class="list-item-sub">I'm the sub</span> 
+						</div>
+						<div class="col-md-2 list-item-check">
+							<div class="item-is-done">OK</div>
+						</div>
+					</li>
+
+					<li class="sidebar-list-item">
+						<div class="col-md-12 list-item-info">
+							<span class="list-item-time timestamp creation_time">I'm the timestamp</span>
+							<span class="list-item-title note_title">I'm the title</span> 
+							<span class="list-item-sub">I'm the sub</span> 
+						</div>	
+					</li>
+				</ul>
 			</div>			
 		</div>
 	</div>
-</body>

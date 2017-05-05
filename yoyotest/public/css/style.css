@@ -1,20 +1,19 @@
-# Empty CSS file for your own CSS
+
 
 body {
-	display: block;
 	overflow: hidden;
 	height: 100%;
+	background: #FF6AD5;
 }
 
 /*=*/
 
 #first-row {
 	position: relative;
-	border: 1px solid #000;
-	margin: 2px auto;
+	margin: 2px;
 	padding: 15px;
 	height: 85px;
-	width: 500;
+	width: 100%;
 	
 }
 
@@ -22,7 +21,6 @@ body {
 
 #top-header {
 
-	border: 1px solid #000;
 	margin: 2px auto;
 	padding: 15px;
 	width: 68%;
@@ -33,12 +31,12 @@ body {
 #view-title {
 	display: inline;
 	vertical-align: middle;
+	font-weight: 900;
 }
 
 #view-mode-panel {
 	display: inline;
 	position: relative;
-	border: 1px solid #000;
 	margin: 2px auto;
 	padding: 15px;
 	width: 30%;
@@ -53,8 +51,7 @@ body {
 
 #second-row {
 	position: relative;
-	border: 1px solid #000;
-	margin: 2px auto;
+	margin: 2px;
 	padding: 15px;
 	height: 500px;
 	width: 500;
@@ -63,41 +60,24 @@ body {
 /*==*/
 
 #content-panel {
-	border: 1px solid #000;
-	margin: 2px auto;
-	padding: 15px;
 	height: 100%;
 	width: 68%;
+	margin: 0px;
+	padding: 0px;
 }
 
 /*===*/
 
 #content-panel-header {
-	position: relative;
-	border: 1px solid #000;
-	margin: 2px auto;
-	padding: 15px;
-	height: 20%;
-	width: 100%; 
+	position: block;
+	display: flex;
 }
 
 /*====*/
-
-#text-title {
-
-	border: 1px solid #000;
-	margin: 2px auto;
-	padding: 15px;
-	width: 67%;
-	height: 100%;
-	display: inline;
-}
-
 #text-commands {
 
 	border: 1px solid #000;
-	margin: 2px auto;
-	padding: 15px;
+	margin: 2px;
 	width: 30%;
 	height: 100%;
 	vertical-align: middle;
@@ -108,7 +88,7 @@ body {
 #edit-save-btns {
 	position: relative;
 	border: 1px solid #000;
-	margin: 2px auto;
+	margin: 2px;
 	padding: 15px;
 	width: 100%;
 	height: 100%;
@@ -128,9 +108,8 @@ body {
 /*===*/
 
 #text-content {
-	border: 1px solid #000;
-	margin: 2px auto;
-	padding: 15px;
+
+	margin: 2px;
 	width: 100%;
 	height: 78%;
 }
@@ -139,10 +118,12 @@ body {
 
 #textarea-content {
 	position: relative;
-	margin: 2px auto;
-	padding: 15px;
-	width: 100%;
-	height: 100%;
+	margin: 2px;
+	width: 99%;
+	height: 90%;
+	outline: none;
+	resize: none;
+
 }
 
 
@@ -152,40 +133,113 @@ body {
 	position: relative;
 	height: 100%;
 	width: 30%;
+	position: relative;
+	margin: 2px;
+	padding: 15px;
+	overflow: auto;
+	display: inline;
 }
 
 /*===*/
 
-#list-sidebar {
-	position: relative;
+.sidebar-list-items {
+	display: block;
 	border: 1px solid #000;
-	margin: 2px auto;
-	padding: 15px;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
+	margin: 5px;
+	padding: 10px;
+
 }
 
 .sidebar-list-item {
 	position: relative;
+	display: block;
 	border: 1px solid #000;
-	margin: 2px auto;
-	padding: 15px;
+	padding: 10px;
+	margin: 5px;
 	height: 100%;
 	width: 100%;
-	max-width: 100%;
+	display: flex;
 }
 
 .list-item-info {
-	position: relative;
 	border: 1px solid #000;
 	margin: 2px auto;
-	padding: 15px;
+	padding: 5px;
+	height: 100%;
+	width: 70%;
+}
+
+.list-item-title {
+	display: inline-block;
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 1px;
+	width: 100%;
+	vertical-align: middle;
+}
+
+.list-item-sub {
+
+	display: inline-block;
+	border: 1px solid #000;
+	margin: 2px auto;
+	padding: 1px;
+	width: 100%;
+	vertical-align: middle;
 }
 
 .list-item-check {
-	position: relative;
 	border: 1px solid #000;
 	margin: 2px auto;
-	padding: 15px;
+	padding: 10px;
+	width: 20%;
+}
+
+#cancel-btn {
+	vertical-align: middle;
+}
+
+#save-btn {
+	vertical-align: middle;
+}
+
+.list-item-time {
+	color: ;
+}
+
+.list-item-title {
+
+}
+
+.list-item-sub {
+
+}
+
+ul.toolbar {
+    list-style: none;
+    padding: 2px 0;
+    margin: 0;
+}
+
+ul.toolbar li {
+    display: inline-block;
+    padding: 0 5px;
+}
+
+ul.toolbar li:hover {
+    display: inline-block;
+    padding: 0 5px;
+    border: 1px solid;
+  	border-top-color: #dfdfdf;
+  	border-left-color: #dfdfdf;
+  	border-right-color: #808080;
+  	border-bottom-color: #808080;
+}
+
+ul.toolbar li:active {
+  box-shadow: 1px 1px 0 0 #000 inset;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #dfdfdf;
+  border-bottom-color: #dfdfdf;
 }
