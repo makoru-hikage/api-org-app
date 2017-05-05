@@ -40,6 +40,7 @@ sub get_entity_name {
 
 
 my $select_columns = [
+	'id',
 	'title',
 	'content',
 	'created_at',
@@ -59,12 +60,11 @@ sub write_note {
 	my $self = shift;
 	$self->{repository}->change_entity('Note');
 
-	unless ($self->{error_code}) {
-		$self->{input_data}->{user_id} = $self->{user}->id;
-		$self->{output_data} = $self
-			->{repository}
-			->create($self->{input_data});
-	}
+	$self->{input_data}->{user_id} = $self->{user}->id;
+
+	$self->{output_data} = $self
+		->{repository}
+		->create($self->{input_data});
 
 	return $self;
 }
@@ -74,12 +74,11 @@ sub edit_note {
 	my $id_value = shift;
 	$self->{repository}->change_entity('Note');
 
-	unless ($self->{error_code}) {
-		$self->{input_data}->{user_id} = $self->{user}->id;
-		$self->{output_data} = $self
-			->{repository}
-			->update('id', $id_value, $self->{input_data});
-	}
+	$self->{input_data}->{user_id} = $self->{user}->id;
+
+	$self->{output_data} = $self
+		->{repository}
+		->update('id', $id_value, $self->{input_data});
 
 	return $self;
 }
@@ -91,6 +90,7 @@ sub get_notes(){
 	my $attributes = {
 		select => $select_columns,
 		as => [
+			'id',
 			'note_title',
 			'note_text',
 			'creation_time',
@@ -98,7 +98,8 @@ sub get_notes(){
 			'first_name',
 			'last_name',
 		],
-		join => 'user',
+		join => ['user', 'todo'],
+		'order_by' => { -desc => 'created_at' },
 	};
 
 	#Assure that only non-deleted items are fetched
@@ -107,12 +108,13 @@ sub get_notes(){
 	#Who owns the notes?
 	$self->{search_filter}->{'user_id'} = $self->{user}->id;
 
-	unless ($self->{error_code}) {
+	#We only want Notes without Todos
+	$self->{search_filter}->{'todo.id'} = undef;
+
 
 		$self->{output_data} = $self
 			->{repository}
 			->get($self->{search_filter}, $attributes);
-	}
 
 	return $self;
 }
