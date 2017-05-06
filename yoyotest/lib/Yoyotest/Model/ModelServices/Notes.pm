@@ -9,7 +9,7 @@ use parent 'Yoyotest::Model::ModelServices::OwnedByUserTrait';
 # COMBOS:
 # 
 # Create a new note: 
-# 	new($repository)
+# 	new($schema)
 # 	->set_input_data($input_data)
 # 	->set_user($username) #NOTE_1
 # 	->write_note
@@ -18,7 +18,7 @@ use parent 'Yoyotest::Model::ModelServices::OwnedByUserTrait';
 # NOTE_1: optional if $username is already in $input_data
 # 	
 # Get specific notes
-#	 new($repository)
+#	 new($schema)
 #	  ->set_search_filter($search_filter)
 #	  ->set_user($username) #NOTE_1
 #	  ->get_notes
@@ -27,7 +27,7 @@ use parent 'Yoyotest::Model::ModelServices::OwnedByUserTrait';
 # NOTE_1: Not needed when accessing own notes
 # 
 # Update a note
-# 	new($repository)
+# 	new($schema)
 #	  ->set_input_data($input_data)
 #	  ->set_user($username)
 #	  ->edit_note($id_value)
