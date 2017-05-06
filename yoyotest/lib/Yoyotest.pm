@@ -73,42 +73,6 @@ any '/logout' => sub {
 
 };
 
-get '/notes' => sub { 
-		$check_user->();
-		my $username = session('user');
-
-		my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
-
-		my $notes = Yoyotest::Model::ModelServices::Notes
-			->new($schema)
-		 	->set_search_filter($search_filter)
-		 	->set_user($username)
-		 	->get_notes
-		 	->get_output_data;
-
-		send_as JSON => $notes, 
-			{ content_type => 'application/json; charset=UTF-8' };
-};
-
-
-get '/todos' => sub { 
-	my $username = session('user');
-	send_error("Please login first.", 401) unless $username;
-
-	my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
-
-	my $todos = Yoyotest::Model::ModelServices::Todos
-		->new($schema)
-		->set_search_filter($search_filter)
-		->set_user($username)
-		->get_todos
-		->get_output_data;
-
-	send_as JSON => $todos, 
-		{ content_type => 'application/json; charset=UTF-8' };
-};
-
-
 get '/test/:id' => sub {
 	my $id = route_parameters->{id};
 	my $input_data = from_json(request->body)->{input_data};
