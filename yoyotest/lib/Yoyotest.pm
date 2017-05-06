@@ -11,7 +11,7 @@ use Yoyotest::Model::ModelServices::Notes;
 our $VERSION = '0.1';
 
 #Load the database connection
-my $schema = schema;
+our $schema = schema;
 
 require Yoyotest::Controllers::NotesController;
 require Yoyotest::Controllers::TodosController;
