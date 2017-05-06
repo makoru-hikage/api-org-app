@@ -13,7 +13,8 @@ our $VERSION = '0.1';
 #Load the database connection
 my $schema = schema;
 
-
+require Yoyotest::Controllers::NotesController;
+require Yoyotest::Controllers::TodosController;
 
 get '/' => sub {
 
@@ -32,11 +33,6 @@ get '/' => sub {
 #     	status => $error->status,
 #     }, { content_type => 'application/json; charset=UTF-8' };
 # };
-
-my $check_user = sub {
-	my $username = session('user');
-	send_error("Please login first.", 401) unless $username;
-};
 
 #A simple login using cookie sessions. See config.yml
 any ['put', 'post'] => '/login' => sub {
