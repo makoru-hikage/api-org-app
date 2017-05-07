@@ -5,11 +5,6 @@ use warnings;
 
 use Yoyotest::Model::Repository;
 
-
-sub get_input_columns {
-	return undef;
-}
-
 sub get_entity_name {
 	return undef;
 }
@@ -30,11 +25,17 @@ sub set_input_data{
 	my $self = shift;
 	my $input_data = shift;
 
+	my $valid_input_columns = $self->get_valid_input_columns();
+
 	#Enforces the developer to set the proper columns
-	return $self unless $self->valid_columns();
+	return $self unless $valid_input_columns;
+
+	my @valid_input_columns = grep { exists $input_data->{$_} } @$valid_input_columns;
+	my %filtered_input;
+	@filtered_input{@valid_input_columns} = @$input_data{@valid_input_columns};
 
 	#Filter out unnecessary key pairs
-	$self->{input_data} = $input_data->{ $self->get_input_columns() };
+	$self->{input_data} = \%filtered_input;
 
 	return $self;
 }
