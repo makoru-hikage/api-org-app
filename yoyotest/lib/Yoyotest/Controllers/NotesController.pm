@@ -77,8 +77,8 @@ put '/notes/:id' => sub {
 			->edit_note($id_value)
 			->get_output_data;
 
-	send_as JSON => $notes->{data}[0], 
-		{ content_type => 'application/json; charset=UTF-8' };
+	send_as JSON => $notes, 
+		{ content_type => 'application/json; charset=UTF-8' };.
 };
 
 del '/notes/:id' => sub { 
