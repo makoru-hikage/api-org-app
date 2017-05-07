@@ -31,7 +31,7 @@ sub first {
 	my $value = shift;
 	my $columns = shift;
 
-	my $entity = $self
+	return $self
 		->{entity}
 		->search ({ $unique_column => $value, is_deleted => 0 })
 		->first;
@@ -64,8 +64,7 @@ sub create {
 
 	my $entity = $self
 		->{entity}
-		->create($input_data)
-		->first;
+		->create($input_data);
 
 	return $input_data;
 }
