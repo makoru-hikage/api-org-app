@@ -50,11 +50,13 @@ my $select_columns = [
 ];
 
 
-my $valid_input_columns = [
-	'username', 
-	'title', 
-	'content',
-];
+sub get_valid_input_columns {
+	return [
+		'username', 
+		'title', 
+		'content',
+	];
+}
 
 sub write_note {
 	my $self = shift;
