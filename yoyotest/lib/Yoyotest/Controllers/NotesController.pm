@@ -1,4 +1,6 @@
 use Yoyotest::Model::Repository;
+use Yoyotest::MenuService;
+use Yoyotest::Validators::NoteValidator;
 
 get '/notes' => sub { 
 	my $username = session('user');
@@ -43,24 +45,30 @@ post '/notes' => sub {
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
-	my $input_data = from_json(request->body)->{input_data};
+	my $request_body = from_json(request->body);
 
-	#Titles must be unique
-	$it_already_exists = Yoyotest::Model::Repository
-		->new($schema, 'Note')
-		->check_uniqueness('title', $input_data->{title});
+	my $notes = sub {
+		my ($schema, $input_data, $username) = @_;
 
-	send_error("Title already exists", 422) if $it_already_exists;
-
-	my $notes = Yoyotest::Model::ModelServices::Notes
+		Yoyotest::Model::ModelServices::Notes
 			->new($schema)
 			->set_input_data($input_data)
 			->set_user($username)
 			->write_note
 			->get_output_data;
+	};
 
-	send_as JSON => $input_data, 
-		{ content_type => 'application/json; charset=UTF-8' };
+	my $response_body = Yoyotest::MenuService
+		->new($schema)
+		->set_model_service_sub($notes)
+		->set_model_service_data($request_body)
+		->set_validator(Yoyotest::Validators::NoteValidator)	
+		->execute;
+
+	status $response_body->{code};
+
+	push_response_header content_type => 'application/json; charset=UTF-8';
+	send_as JSON => $response_body;
 };
 
 put '/notes/:id' => sub { 
@@ -78,7 +86,7 @@ put '/notes/:id' => sub {
 			->get_output_data;
 
 	send_as JSON => $notes, 
-		{ content_type => 'application/json; charset=UTF-8' };.
+		{ content_type => 'application/json; charset=UTF-8' };
 };
 
 del '/notes/:id' => sub { 
