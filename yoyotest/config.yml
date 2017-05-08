@@ -37,10 +37,9 @@ engines:
 
 plugins:
     Passphrase:
-        algorithm: Bcrypt
- 
-        Bcrypt:
-            cost: 4
+      algorithm: Bcrypt
+      Bcrypt:
+          cost: 4
 # session engine
 #
 # Simple: in-memory session store - Dancer2::Session::Simple
