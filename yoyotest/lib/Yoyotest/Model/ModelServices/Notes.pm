@@ -52,7 +52,6 @@ my $select_columns = [
 
 sub get_valid_input_columns {
 	return [
-		'username', 
 		'title', 
 		'content',
 	];
