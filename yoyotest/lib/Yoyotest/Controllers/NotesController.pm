@@ -67,7 +67,7 @@ put '/notes/:id' => sub {
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
-	my $input_data = from_json(request->body)->{input_data} if from_json(request->body);
+	my $input_data = from_json(request->body)->{input_data};
 	$input_data->{'me.id'} = route_parameters->{id};
 
 	my $notes = Yoyotest::Model::ModelServices::Notes
