@@ -9,6 +9,10 @@ sub get_entity_name {
 	return undef;
 }
 
+sub get_valid_input_columns {
+	return undef;
+}
+
 sub new {
 	my $class = shift;
 	my $self = {};
@@ -16,7 +20,6 @@ sub new {
 	
 	bless ($self, $class);
 	$self->{repository} = Yoyotest::Model::Repository->new($schema, $self->get_entity_name);
-	$self->{error_code} = 0;
 
 	return $self;
 }
