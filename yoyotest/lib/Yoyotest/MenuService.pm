@@ -1,5 +1,7 @@
 package Yoyotest::MenuService;
 
+use Yoyotest::Model::Repository;
+
 # The method chain:
 # 
 # Yoyotest::MenuService
@@ -84,6 +86,27 @@ sub validate {
 	}
 	
     return $self;
+}
+
+sub check_uniqueness {
+	my $self = shift;
+	my $entity_name = shift;
+	my $column = shift;
+
+	#The data to be checked
+	my $tested_param = $self->{input_data}->{$column};
+
+	my $it_is_unique = Yoyotest::Model::Repository
+		->new($self->{schema}, $entity_name)
+		->check_uniqueness($column, $tested_param);
+
+	unless ($it_is_unique) {
+        # handle the failures
+        $self->{message} = "\"$tested_param\" is already taken.";
+        $self->{code} = 422;
+    }
+
+	return $self;
 }
 
 sub prepare_response {
