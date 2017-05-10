@@ -53,8 +53,6 @@ sub set_model_service_data {
 	my $self = shift;
 	$self->{model_service_data} = shift;
 
-	my $model_service_data = $self->{model_service_data};
-
 	$self->{input_data} = $self->{model_service_data}->{input_data};
 	$self->{search_filter} = $self->{model_service_data}->{search_filter};
 
@@ -94,7 +92,7 @@ sub prepare_response {
 	return {
 		code => $self->{code},
 		message => $self->{message},
-		data => $self->{data},
+		data => $self->{output_data},
 		input_data => $self->{input_data},
 	};
 }
