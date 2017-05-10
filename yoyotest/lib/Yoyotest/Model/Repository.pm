@@ -66,7 +66,7 @@ sub create {
 		->{entity}
 		->create($input_data);
 
-	return $input_data;
+	return $entity;
 }
 
 sub update {
@@ -76,14 +76,14 @@ sub update {
 	my $input_data = shift;
 
 	#Return nothing if such row does not exist 
-	$self->first($unique_column, $value)
-	->update($input_data) or return undef;
+	my $entity = $self->first($unique_column, $value)
+	->update($input_data);
 
 	#Prepare something for the response body
 	#The updated fields and the values are included
 	#The identifying column is also included 
 	$input_data->{ $unique_column } = $value;
-	return $input_data;
+	return $entity;
 
 }
 
