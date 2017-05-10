@@ -106,7 +106,7 @@ sub check_uniqueness {
 	my $column = shift;
 	my $value = shift;
 
-	return $self->first($column, $value);
+	return $self->first($column, $value) ? 0 : 1;
 }
 
 1;
