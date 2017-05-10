@@ -58,8 +58,7 @@ sub get_search_filter {
 
 sub get_output_data {
 	my $self = shift;
-
-	$self->{output_data} = $self->{error_code} if $self->{error_code};
+	
 	return $self->{output_data};
 }
 
