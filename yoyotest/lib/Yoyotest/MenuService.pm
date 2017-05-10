@@ -115,8 +115,7 @@ sub prepare_response {
 	return {
 		code => $self->{code},
 		message => $self->{message},
-		data => $self->{output_data},
-		input_data => $self->{input_data},
+		data => $self->{output_data}
 	};
 }
 
