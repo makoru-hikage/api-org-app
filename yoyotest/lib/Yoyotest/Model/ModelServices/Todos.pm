@@ -6,8 +6,7 @@ use diagnostics;
 
 use parent 'Yoyotest::Model::ModelService';
 use parent 'Yoyotest::Model::ModelServices::OwnedByUserTrait';
-
-use Yoyotest::Model::ModelServices::Notes;
+use Dancer2;
 
 # COMBOS:
 # 
@@ -51,12 +50,14 @@ use Yoyotest::Model::ModelServices::Notes;
 #	  ->get_output_data;  
 
 
-my $valid_input_columns = [
-	'users.username', 
-	'notes.title', 
-	'notes.content', 
-	'todos.target_datetime'
-];
+sub get_valid_input_columns {
+	return [
+		'title', 
+		'content',
+		'task',
+		'target_datetime'
+	];
+}
 
 sub get_entity_name {
 	return 'Todo';
@@ -78,33 +79,43 @@ sub set_note {
 
 sub write_note {
 	my $self = shift;
-	$self->{repository}->change_entity('Note');
 
-	if ($self->{user}) {
-		my $note_maker = Yoyotest::Model::ModelServices::Notes->new( $self->{repository} );
+	$self->{repository} = $self->{repository}->change_entity('Note');
+	$self->{input_data}->{user_id} = $self->{user}->id;
 
-		$self->{note} = $note_maker
-			->set_input_data($self->{input_data})
-			->set_user($self->{user}->username)
-			->write_note
-			->get_output_data;
-	}
+	my $input_data = { 
+		user_id => $self->{input_data}->{user_id}, 
+		title => $self->{input_data}->{title}, 
+		content => $self->{input_data}->{content}
+	};
+
+	$self->{note} = $self
+		->{repository}
+		->create($input_data);
 
 	return $self;
 }
 
 sub create_todo {
 	my $self = shift;
-	$self->{repository}->change_entity('Todo');
-	my $note_and_user_exists = exists $self->{user} and exists $self->{note};
 
-	if ( $note_and_user_exists ) {
-		$self->{input_data}->{user_id} = $self->{user}->{id};
-		$self->{input_data}->{note_id} = $self->{note}->{id};
+	$self->{repository} = $self->{repository}->change_entity('Todo');
+	my $note_exists = exists $self->{note};
 
-		$self->{output_data} = $self
+	my $input_data = {  
+		task => $self->{input_data}->{task}, 
+		target_datetime => $self->{input_data}->{target_datetime}
+	};
+
+	if ( $note_exists ) {
+		$input_data->{note_id} = $self->{note}->id;
+
+		my %output_data = $self
 			->{repository}
-			->create('Todo', $self->{input_data});
+			->create($input_data)->get_columns;
+
+		$self->{output_data} = \%output_data;
+	
 	}
 
 	return $self;
@@ -149,8 +160,35 @@ sub get_todos {
 	return $self;
 }
 
-sub convert_into_note {
+sub edit_todo {
+	my $self = shift;
+	my $id_value = shift;
 
+	$self->{repository} = $self->{repository}->change_entity('Todo');
+	$self->{input_data}->{user_id} = $self->{user}->id;
+
+	my $todo_data = {  
+		task => $self->{input_data}->{task}, 
+		target_datetime => $self->{input_data}->{target_datetime}
+	};
+
+	my $note_data = { 
+		user_id => $self->{input_data}->{user_id}, 
+		title => $self->{input_data}->{title}, 
+		content => $self->{input_data}->{content}
+	};
+
+	$self->{input_data}->{user_id} = $self->{user}->id;
+
+	my $todo = $self
+		->{repository}
+		->update('note_id', $id_value, $todo_data)
+		->note
+		->update($note_data);
+
+		$self->{output_data} = $self->{input_data};
+
+	return $self;
 }
 
 1;
