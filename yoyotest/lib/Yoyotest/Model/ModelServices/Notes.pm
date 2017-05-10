@@ -59,7 +59,7 @@ sub get_valid_input_columns {
 
 sub write_note {
 	my $self = shift;
-	$self->{repository}->change_entity('Note');
+	$self->{repository} = $self->{repository}->change_entity('Note');
 
 	$self->{input_data}->{user_id} = $self->{user}->id;
 
@@ -73,7 +73,7 @@ sub write_note {
 sub edit_note {
 	my $self = shift;
 	my $id_value = shift;
-	$self->{repository}->change_entity('Note');
+	$self->{repository} = $self->{repository}->change_entity('Note');
 
 	$self->{input_data}->{user_id} = $self->{user}->id;
 
