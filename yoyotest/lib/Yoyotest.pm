@@ -55,7 +55,7 @@ any ['put', 'post'] => '/login' => sub {
 	send_error("Unauthorized! Wrong username and/or password", 401) unless $access_granted;
 
 	session user => $username_from_db;
-	send_as JSON => { message => "You are now logged in as ". session('user')},
+	send_as JSON => { message => "You are now logged in as ". $username_from_db	},
 		{ content_type => 'application/json; charset=UTF-8' };
 
 };
@@ -71,13 +71,15 @@ any '/logout' => sub {
 
 get '/test/:id' => sub {
 	my $id = route_parameters->{id};
-	my $input_data = from_json(request->body)->{input_data};
-	my $search_filter = from_json(request->body)->{search_filter};
+
+	my $repo = Yoyotest::Model::Repository->new($schema, 'User');
+	my $aaa = $repo->first('username', 'cmoran');
+	$repo = $repo->change_entity('Note');
+	my $bbb = $repo->first('id', 1);
 
 	my $data = {
-		id => $id,
-		input => $input_data,
-		filter => $search_filter,
+		'aaa' => $aaa->username,
+		'bbb' => $bbb->title,
 	};
 
 	send_as JSON => $data , { content_type => 'application/json; charset=UTF-8' };
