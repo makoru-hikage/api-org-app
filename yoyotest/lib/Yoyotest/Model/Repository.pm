@@ -87,7 +87,7 @@ sub update {
 
 }
 
-sub delete {
+sub soft_delete {
 	my $self = shift;
 	my $unique_column = shift;
 	my $value = shift;
