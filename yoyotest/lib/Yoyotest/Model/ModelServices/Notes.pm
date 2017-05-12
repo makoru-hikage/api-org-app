@@ -75,8 +75,6 @@ sub edit_note {
 	my $id_value = shift;
 	$self->{repository} = $self->{repository}->change_entity('Note');
 
-	$self->{input_data}->{user_id} = $self->{user}->id;
-
 	$self->{output_data} = $self
 		->{repository}
 		->update('id', $id_value, $self->{input_data});

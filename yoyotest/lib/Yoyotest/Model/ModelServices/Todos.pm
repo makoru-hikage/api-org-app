@@ -165,7 +165,6 @@ sub edit_todo {
 	my $id_value = shift;
 
 	$self->{repository} = $self->{repository}->change_entity('Todo');
-	$self->{input_data}->{user_id} = $self->{user}->id;
 
 	my $todo_data = {  
 		task => $self->{input_data}->{task}, 
