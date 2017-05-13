@@ -152,7 +152,12 @@ sub get_todos {
 		'join' => { 'note' => 'user' }
 	};
 
+	#Who owns the todos?
 	$self->{search_filter}->{'note.user_id'} = $self->{user}->id;
+
+	#We do not want deleted rows
+	$self->{search_filter}->{'me.is_deleted'} = 0;
+	$self->{search_filter}->{'note.is_deleted'} = 0;
 
 	my $todos = $self->{repository}->get($self->{search_filter}, $attributes);
 
@@ -186,6 +191,44 @@ sub edit_todo {
 		->update($note_data);
 
 		$self->{output_data} = $self->{input_data};
+
+	return $self;
+}
+
+sub delete_todo {
+	my $self = shift;
+	my $unique_column = shift;
+	my $id_value = shift;
+
+	$self->{output_data} = $self->{repository}
+		->soft_delete($unique_column, $id_value);
+
+	return $self;
+}
+
+sub convert_todo_to_note {
+	my $self = shift;
+	my $id_value = shift;
+
+	$self->{repository} = $self->{repository}->change_entity('Todo');
+
+	my $todo = $self->{repository}->soft_delete('note_id', $id_value);
+
+	$self->{output_data} = $todo ? "Successfully converted" : 0;
+
+	return $self;
+}
+
+sub toggle_done {
+	my $self = shift;
+	my $id_value = shift;
+	my $is_done = shift;
+
+	$self->{repository} = $self->{repository}->change_entity('Todo');
+
+	my $todo = $self->{repository}->update('note_id', $id_value, { is_done => $is_done});
+
+	$self->{output_data} = $todo ? "Successfully converted" : 0;
 
 	return $self;
 }
