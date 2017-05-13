@@ -103,4 +103,51 @@ del '/todos/:id' => sub {
 	send_as JSON => { message => $is_deleted, code => 200 };
 };
 
+any ['put', 'post'] => '/todos/:id/convert' => sub { 
+	my $username = session('user');
+	send_error("Please login first.", 401) unless $username;
+
+	$id_value = route_parameters->{id};
+
+	my $is_converted = Yoyotest::Model::ModelServices::Todos
+		->new($schema)
+		->convert_todo_to_note($id_value)
+		->get_output_data;
+
+	send_error("It does not exist", 404) unless $is_converted;
+	status 200;
+
+	push_response_header content_type => 'application/json; charset=UTF-8';
+	send_as JSON => { message => $is_converted, code => 200 };
+};
+
+any ['put', 'post', 'del'] => '/todos/:id/done' => sub { 
+	my $username = session('user');
+	send_error("Please login first.", 401) unless $username;
+
+	my $mark = undef;
+	my $message = "error";
+
+	if (request->method eq 'POST' || request->method eq 'PUT') {
+		$mark = 1;
+		$message = "It is marked as done";
+	} else {
+		$mark = 0;
+		$message = "It is marked as not done";
+	} 
+
+	$id_value = route_parameters->{id};
+
+	my $is_converted = Yoyotest::Model::ModelServices::Todos
+		->new($schema)
+		->toggle_done($id_value, $mark)
+		->get_output_data;
+
+	send_error("It does not exist", 404) unless $is_converted;
+	status 200;
+
+	push_response_header content_type => 'application/json; charset=UTF-8';
+	send_as JSON => { message => $message, code => 200 };
+};
+
 1;
