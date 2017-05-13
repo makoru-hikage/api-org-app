@@ -80,8 +80,6 @@ put '/notes/:id' => sub {
 	$id_value = route_parameters->{id};
 
 	my $request_body = from_json(request->body);
-	$response_body->{input_data}->{username} = $username;
-	$response_body->{search_filter}->{id} = $id_value;
 
 	my $notes = sub {
 		my ($schema, $input_data) = @_;
@@ -89,7 +87,6 @@ put '/notes/:id' => sub {
 		Yoyotest::Model::ModelServices::Notes
 			->new($schema)
 			->set_input_data($input_data)
-			->set_user($username)
 			->edit_note($id_value)
 			->get_output_data;
 	};
@@ -112,8 +109,49 @@ del '/notes/:id' => sub {
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
-	send_as JSON => $notes->{data}[0], 
-		{ content_type => 'application/json; charset=UTF-8' };
+	$id_value = route_parameters->{id};
+
+	my $is_deleted = Yoyotest::Model::ModelServices::Notes
+		->new($schema)
+		->delete_note('id', $id_value)
+		->get_output_data;
+
+	send_error("It does not exist", 404) unless $is_deleted;
+	status 200;
+
+	push_response_header content_type => 'application/json; charset=UTF-8';
+	send_as JSON => { message => $is_deleted, code => 200 };
+};
+
+any ['put', 'post'] => '/notes/:id/convert' => sub {
+	my $username = session('user');
+	send_error("Please login first.", 401) unless $username;
+
+	$id_value = route_parameters->{id};
+
+	my $request_body = from_json(request->body);
+
+	my $notes = sub {
+		my ($schema, $input_data) = @_;
+
+		Yoyotest::Model::ModelServices::Notes
+			->new($schema)
+			->convert_note_to_todo($id_value, $input_data->{task}, $input_data->{target_datetime})
+			->get_output_data;
+	};
+
+	my $response_body = Yoyotest::MenuService
+		->new($schema)
+		->set_model_service_sub($notes)
+		->set_model_service_data($request_body)
+		->set_validator(Yoyotest::Validators::TodoValidator)	
+		->check_uniqueness('Note','title')	
+		->execute;
+
+	status $response_body->{code};
+
+	push_response_header content_type => 'application/json; charset=UTF-8';
+	send_as JSON => $response_body;
 };
 
 1;
