@@ -38,18 +38,6 @@ sub get_entity_name {
 	return 'Note';
 }
 
-
-my $select_columns = [
-	'id',
-	'title',
-	'content',
-	'created_at',
-	'user.username',
-	'user.first_name',
-	'user.last_name',
-];
-
-
 sub get_valid_input_columns {
 	return [
 		'title', 
@@ -86,6 +74,16 @@ sub get_notes(){
 	my $self = shift;
 	$self->{repository}->change_entity('Note');
 
+	my $select_columns = [
+		'id',
+		'title',
+		'content',
+		'created_at',
+		'user.username',
+		'user.first_name',
+		'user.last_name',
+	];
+
 	my $attributes = {
 		select => $select_columns,
 		as => [
@@ -114,6 +112,43 @@ sub get_notes(){
 		$self->{output_data} = $self
 			->{repository}
 			->get($self->{search_filter}, $attributes);
+
+	return $self;
+}
+
+sub delete_note {
+	my $self = shift;
+	my $unique_column = shift;
+	my $id_value = shift;
+
+	$self->{output_data} = $self->{repository}
+		->soft_delete($unique_column, $id_value);
+
+	return $self;
+}
+
+
+sub convert_note_to_todo {
+	my $self = shift;
+	my $id_value = shift;
+	my $task = shift;
+	my $target_datetime = shift;
+
+	#Just to check for 404
+	my $note = $self->{repository}->first('id', $id_value);
+	return 0 unless $note;
+
+	my $todo_data = {
+		task => $task,
+		target_datetime => $target_datetime,
+		note_id => $id_value,
+		is_deleted => 0,
+	};
+
+	my $todo = $note->search_related_rs('todo')
+		->update_or_create($todo_data, { key => 'note_id_UNIQUE'});
+
+	$self->{output_data} = $todo ? "Successfully converted" : 0;
 
 	return $self;
 }
