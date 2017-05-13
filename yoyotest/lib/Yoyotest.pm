@@ -69,27 +69,4 @@ any '/logout' => sub {
 
 };
 
-get '/test/:id' => sub {
-	my $id = route_parameters->{id};
-
-	my $repo = Yoyotest::Model::Repository->new($schema, 'User');
-	my $aaa = $repo->first('username', 'cmoran');
-	$repo = $repo->change_entity('Note');
-	my $bbb = $repo->first('id', 1);
-
-	my $data = {
-		'aaa' => $aaa->username,
-		'bbb' => $bbb->title,
-	};
-
-	send_as JSON => $data , { content_type => 'application/json; charset=UTF-8' };
-};
-
-get '/hash_pass/:pass' => sub {
-	my $passwd = param 'pass';
-	send_as JSON => {
-			passwd => passphrase( $passwd )->generate->rfc2307} , 
-			{ content_type => 'application/json; charset=UTF-8' };
-};
-
 true;
