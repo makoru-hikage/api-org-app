@@ -26,7 +26,7 @@ post '/todos' => sub {
 	my $request_body = from_json(request->body);
 	$response_body->{input_data}->{username} = $username;
 
-	my $notes = sub {
+	my $todos = sub {
 		my ($schema, $input_data) = @_;
 
 		Yoyotest::Model::ModelServices::Todos
@@ -40,7 +40,7 @@ post '/todos' => sub {
 
 	my $response_body = Yoyotest::MenuService
 		->new($schema)
-		->set_model_service_sub($notes)
+		->set_model_service_sub($todos)
 		->set_model_service_data($request_body)
 		->set_validator(Yoyotest::Validators::TodoValidator)
 		->check_uniqueness('Note','title')
@@ -62,7 +62,7 @@ put '/todos/:id' => sub {
 	$response_body->{input_data}->{username} = $username;
 	$response_body->{search_filter}->{id} = $id_value;
 
-	my $notes = sub {
+	my $todos = sub {
 		my ($schema, $input_data) = @_;
 
 		Yoyotest::Model::ModelServices::Todos
@@ -75,7 +75,7 @@ put '/todos/:id' => sub {
 
 	my $response_body = Yoyotest::MenuService
 		->new($schema)
-		->set_model_service_sub($notes)
+		->set_model_service_sub($todos)
 		->set_model_service_data($request_body)
 		->set_validator(Yoyotest::Validators::TodoValidator)
 		->check_uniqueness('Note','title')
@@ -85,6 +85,24 @@ put '/todos/:id' => sub {
 
 	push_response_header content_type => 'application/json; charset=UTF-8';
 	send_as JSON => $response_body;
+};
+
+del '/todos/:id' => sub { 
+	my $username = session('user');
+	send_error("Please login first.", 401) unless $username;
+
+	$id_value = route_parameters->{id};
+
+	my $is_deleted = Yoyotest::Model::ModelServices::Notes
+		->new($schema)
+		->delete_note('id', $id_value)
+		->get_output_data;
+
+	send_error("It does not exist", 404) unless $is_deleted;
+	status 200;
+
+	push_response_header content_type => 'application/json; charset=UTF-8';
+	send_as JSON => { message => $is_deleted, code => 200 };
 };
 
 1;
