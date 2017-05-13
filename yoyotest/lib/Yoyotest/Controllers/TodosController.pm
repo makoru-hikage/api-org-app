@@ -60,7 +60,6 @@ put '/todos/:id' => sub {
 
 	my $request_body = from_json(request->body);
 	$response_body->{input_data}->{username} = $username;
-	$response_body->{search_filter}->{id} = $id_value;
 
 	my $todos = sub {
 		my ($schema, $input_data) = @_;
@@ -68,7 +67,6 @@ put '/todos/:id' => sub {
 		Yoyotest::Model::ModelServices::Todos
 			->new($schema)
 			->set_input_data($input_data)
-			->set_user($username)
 			->edit_todo($id_value)
 			->get_output_data;
 	};
