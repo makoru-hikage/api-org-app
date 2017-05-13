@@ -35,7 +35,6 @@ sub first {
 		->{entity}
 		->search ({ $unique_column => $value, is_deleted => 0 })
 		->first;
-
 }
 
 sub get {
@@ -76,13 +75,14 @@ sub update {
 	my $input_data = shift;
 
 	#Return nothing if such row does not exist 
-	my $entity = $self->first($unique_column, $value)
-	->update($input_data);
+	my $entity = $self->first($unique_column, $value);
 
-	#Prepare something for the response body
-	#The updated fields and the values are included
-	#The identifying column is also included 
-	$input_data->{ $unique_column } = $value;
+	#For 404 error
+	return 0 unless $entity;
+
+	#update the selected...
+	$entity->update($input_data);
+
 	return $entity;
 
 }
