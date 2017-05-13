@@ -2,7 +2,7 @@ use Yoyotest::Model::Repository;
 use Yoyotest::MenuService;
 use Yoyotest::Validators::TodoValidator;
 
-get '/todos' => sub { 
+get '/api/todos' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -19,7 +19,7 @@ get '/todos' => sub {
 		{ content_type => 'application/json; charset=UTF-8' };
 };
 
-post '/todos' => sub { 
+post '/api/todos' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -52,7 +52,7 @@ post '/todos' => sub {
 	send_as JSON => $response_body;
 };
 
-put '/todos/:id' => sub { 
+put '/api/todos/:id' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -85,7 +85,7 @@ put '/todos/:id' => sub {
 	send_as JSON => $response_body;
 };
 
-del '/todos/:id' => sub { 
+del '/api/todos/:id' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -103,7 +103,7 @@ del '/todos/:id' => sub {
 	send_as JSON => { message => $is_deleted, code => 200 };
 };
 
-any ['put', 'post'] => '/todos/:id/convert' => sub { 
+any ['put', 'post'] => '/api/todos/:id/convert' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -121,7 +121,7 @@ any ['put', 'post'] => '/todos/:id/convert' => sub {
 	send_as JSON => { message => $is_converted, code => 200 };
 };
 
-any ['put', 'post', 'del'] => '/todos/:id/done' => sub { 
+any ['put', 'post', 'del'] => '/api/todos/:id/done' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 

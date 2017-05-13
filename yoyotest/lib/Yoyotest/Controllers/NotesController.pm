@@ -2,7 +2,7 @@ use Yoyotest::Model::Repository;
 use Yoyotest::MenuService;
 use Yoyotest::Validators::NoteValidator;
 
-get '/notes' => sub { 
+get '/api/notes' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -21,7 +21,7 @@ get '/notes' => sub {
 		{ content_type => 'application/json; charset=UTF-8' };
 };
 
-get '/notes/:id' => sub { 
+get '/api/notes/:id' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -41,7 +41,7 @@ get '/notes/:id' => sub {
 		{ content_type => 'application/json; charset=UTF-8' };
 };
 
-post '/notes' => sub { 
+post '/api/notes' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -73,7 +73,7 @@ post '/notes' => sub {
 	send_as JSON => $response_body;
 };
 
-put '/notes/:id' => sub {
+put '/api/notes/:id' => sub {
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -105,7 +105,7 @@ put '/notes/:id' => sub {
 	send_as JSON => $response_body;
 };
 
-del '/notes/:id' => sub { 
+del '/api/notes/:id' => sub { 
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
@@ -123,7 +123,7 @@ del '/notes/:id' => sub {
 	send_as JSON => { message => $is_deleted, code => 200 };
 };
 
-any ['put', 'post'] => '/notes/:id/convert' => sub {
+any ['put', 'post'] => '/api/notes/:id/convert' => sub {
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
