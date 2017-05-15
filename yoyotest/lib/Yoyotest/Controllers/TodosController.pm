@@ -2,31 +2,45 @@ use Yoyotest::Model::Repository;
 use Yoyotest::MenuService;
 use Yoyotest::Validators::TodoValidator;
 
-my $todos_getter = sub {
+sub todos_getter { 
 
-	my $username = session('user');
-	send_error("Please login first.", 401) unless $username;
+	return sub { 
+		my $get_only_one = shift;
 
-	my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
-	$search_filter->{'note_id'} = route_parameters->{id} if route_parameters->{id};
+		my $username = session('user');
+		send_error("Please login first.", 401) unless $username;
 
-	my $todos = Yoyotest::Model::ModelServices::Todos
-		->new($schema)
-		->set_search_filter($search_filter)
-		->set_user($username)
-		->get_todos
-		->get_output_data;
+		my $id = route_parameters->{id} if $get_only_one;
 
-	send_error("There are no records",404) unless $todos;
+		my $search_filter = from_json(request->body) ?
+			from_json(request->body)->{search_filter} :
+			undef;
+	
+		$search_filter->{'note_id'} = $id;
 
-	$todos = $todos->{data}[0] if route_parameters->{id};
+		if (!$id) {
+			delete $search_filter->{'note_id'};
+		} 
 
-	send_as JSON => $todos, 
-		{ content_type => 'application/json; charset=UTF-8' };
+		my $todos = Yoyotest::Model::ModelServices::Todos
+			->new($schema)
+		 	->set_search_filter($search_filter)
+		 	->set_user($username)
+		 	->get_todos
+		 	->get_output_data;
+
+		$todos = $id ? $todos->{data}[0] : $todos->{data};
+
+		send_error("No data available", 404) unless $todos;
+
+		send_as JSON => { data => $todos }, 
+			{ content_type => 'application/json; charset=UTF-8' };
+	};
 };
 
-get '/api/todos' => $todos_getter;
-get '/api/todos/:id' => $todos_getter;
+get '/api/todos' => todos_getter();
+get '/api/todos/:id' => todos_getter(1);
+
 
 post '/api/todos' => sub { 
 	my $username = session('user');
