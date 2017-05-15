@@ -33,7 +33,7 @@ CREATE TABLE `notes` (
   PRIMARY KEY (`id`),
   KEY `note_owner_idx` (`user_id`),
   CONSTRAINT `note_owner` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `notes` (
 
 LOCK TABLES `notes` WRITE;
 /*!40000 ALTER TABLE `notes` DISABLE KEYS */;
-INSERT INTO `notes` VALUES (1,1,'Testing Todo Creation','Lorem ipsum dolor sit amet... PUT TODO','2017-04-18 22:04:10','2017-04-18 22:04:10',0),(2,5,'Data Structures','I must study the data structures. I must choose the language of my choice. I\'ll start with Perl','2017-04-25 17:40:23','2017-04-25 17:40:23',0),(3,1,'Student Registration 1st 2017-2018 ','I have to enroll early. I hate the long queues.','2017-04-25 17:41:21','2017-04-25 17:41:21',0),(4,1,'Mentally Challenged Man along Buendia Road','It seems that his last bath was like 10 years ago. As a clinically insane man, he grabs everyone\'s junks regardless of gender. He also randomly calls out random names. And sometimes, he talks like your polite average Japanese businessman, although he\'s a Filipino. And he does it fluently. ','2017-04-25 17:45:33','2017-04-25 17:45:33',0),(5,1,'Transforming Furikake Gohan','I recently watched this show titled \"Shokugeki no Souma\". He made such delicious. And looked it up on Google, the ingredients and utensils are within my means. I shall cook one.','2017-04-25 17:49:48','2017-04-25 17:49:48',0),(6,1,'Japanese \"Fu\" sounds like \"Who\"','There is no \"f\" in Japanese. They even pronounce \"coffee\" as \"co-hee\".','2017-04-25 17:49:48','2017-04-25 17:49:48',0),(7,1,'I am a NOTE to be DELETED','Test Deletion','2017-05-13 11:33:30','2017-05-13 11:33:30',0),(8,1,'I shall be converted to Todo','This content shall be changed','2017-05-13 17:39:59','2017-05-13 17:39:59',0),(9,1,'I am a TODO to be DELETED','This content shall be changed','2017-05-15 18:54:33','2017-05-15 18:54:33',0);
+INSERT INTO `notes` VALUES (1,1,'Testing Note Creation3','Lorem ipsum dolor sit amet... PUT NOTE','2017-04-18 22:04:10','2017-04-18 22:04:10',0),(2,5,'Data Structures','I must study the data structures. I must choose the language of my choice. I\'ll start with Perl','2017-04-25 17:40:23','2017-04-25 17:40:23',0),(3,1,'Student Registration 1st 2017-2018 ','I have to enroll early. I hate the long queues.','2017-04-25 17:41:21','2017-04-25 17:41:21',0),(4,1,'Mentally Challenged Man along Buendia Road','It seems that his last bath was like 10 years ago. As a clinically insane man, he grabs everyone\'s junks regardless of gender. He also randomly calls out random names. And sometimes, he talks like your polite average Japanese businessman, although he\'s a Filipino. And he does it fluently. ','2017-04-25 17:45:33','2017-04-25 17:45:33',0),(5,1,'Transforming Furikake Gohan','I recently watched this show titled \"Shokugeki no Souma\". He made such delicious. And looked it up on Google, the ingredients and utensils are within my means. I shall cook one.','2017-04-25 17:49:48','2017-04-25 17:49:48',0),(6,1,'Japanese \"Fu\" sounds like \"Who\"','There is no \"f\" in Japanese. They even pronounce \"coffee\" as \"co-hee\".','2017-04-25 17:49:48','2017-04-25 17:49:48',0),(7,1,'I am a NOTE to be DELETED','Test Deletion','2017-05-13 11:33:30','2017-05-13 11:33:30',0),(8,1,'I shall be converted to Todo','This content shall be changed','2017-05-13 17:39:59','2017-05-13 17:39:59',0),(9,1,'I am a TODO to be DELETED','This content shall be changed','2017-05-15 18:54:33','2017-05-15 18:54:33',0),(10,1,'Testing Note Creation2 ','Lorem ipsum dolor sit amet... POST NOTE','2017-05-15 20:37:07','2017-05-15 20:37:07',0);
 /*!40000 ALTER TABLE `notes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,4 +119,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-15 18:56:31
+-- Dump completed on 2017-05-15 21:54:10
