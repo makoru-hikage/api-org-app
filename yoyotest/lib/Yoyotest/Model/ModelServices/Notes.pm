@@ -99,14 +99,16 @@ sub get_notes(){
 		'order_by' => { -desc => 'created_at' },
 	};
 
-	#Assure that only non-deleted items are fetched
-	$self->{search_filter}->{'me.is_deleted'} = 0;
+	my $raw_search_filter = $self->{search_filter};
 
-	#Who owns the notes?
-	$self->{search_filter}->{'user_id'} = $self->{user}->id;
-
-	#We only want Notes without Todos
-	$self->{search_filter}->{'todo.id'} = undef;
+	$self->{search_filter} = {
+		'-and' => [
+			$raw_search_filter,
+			'me.is_deleted' => 0,
+			'user_id' => $self->{user}->id,
+			'-or' => { 'todo.id' => undef, 'todo.is_deleted' => 1 } 
+		]
+	};
 
 	$self->{output_data} = $self
 		->{repository}
