@@ -1,4 +1,10 @@
 requires "Dancer2" => "0.205000";
+requires "Dancer2::Plugin::DBIC" => "0.0013";
+requires "Dancer2::Plugin::Passphrase" => "3.3.0";
+requires "Validation::Class" => "7.900057";
+requires "DBIx::Class::TimeStamp" => "0.14";
+requires "DBIx::Class" => "0.082840";
+
 
 recommends "YAML"             => "0";
 recommends "URL::Encode::XS"  => "0";
