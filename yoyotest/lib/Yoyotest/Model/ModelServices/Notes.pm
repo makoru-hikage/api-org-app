@@ -108,10 +108,9 @@ sub get_notes(){
 	#We only want Notes without Todos
 	$self->{search_filter}->{'todo.id'} = undef;
 
-
-		$self->{output_data} = $self
-			->{repository}
-			->get($self->{search_filter}, $attributes);
+	$self->{output_data} = $self
+		->{repository}
+		->get($self->{search_filter}, $attributes);
 
 	return $self;
 }
