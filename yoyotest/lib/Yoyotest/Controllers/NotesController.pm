@@ -2,11 +2,13 @@ use Yoyotest::Model::Repository;
 use Yoyotest::MenuService;
 use Yoyotest::Validators::NoteValidator;
 
-get '/api/notes' => sub { 
+my $notes_getter = sub { 
+
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
 	my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
+	$search_filter->{'me.id'} = route_parameters->{id} if route_parameters->{id};
 
 	my $notes = Yoyotest::Model::ModelServices::Notes
 		->new($schema)
@@ -16,30 +18,15 @@ get '/api/notes' => sub {
 	 	->get_output_data;
 
 	send_error("No data available", 404) unless $notes->{data}[0];
+
+	$notes = $notes->{data}[0] if route_parameters->{id};
 
 	send_as JSON => $notes, 
 		{ content_type => 'application/json; charset=UTF-8' };
 };
 
-get '/api/notes/:id' => sub { 
-	my $username = session('user');
-	send_error("Please login first.", 401) unless $username;
-
-	my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
-	$search_filter->{'id'} = route_parameters->{id};
-
-	my $notes = Yoyotest::Model::ModelServices::Notes
-		->new($schema)
-	 	->set_search_filter($search_filter)
-	 	->set_user($username)
-	 	->get_notes
-	 	->get_output_data;
-
-	send_error("No data available", 404) unless $notes->{data}[0];
-
-	send_as JSON => $notes->{data}[0], 
-		{ content_type => 'application/json; charset=UTF-8' };
-};
+get '/api/notes' => $notes_getter;
+get '/api/notes/:id' => $notes_getter;
 
 post '/api/notes' => sub { 
 	my $username = session('user');

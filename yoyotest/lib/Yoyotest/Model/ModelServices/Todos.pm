@@ -127,7 +127,7 @@ sub get_todos {
 
 	my $attributes = {
 		'select' => [
-			'id',
+			'note_id',
 			'task', 
 			'target_datetime', 
 			'is_done',
@@ -138,7 +138,7 @@ sub get_todos {
 			'user.username',
 		],
 		'as' => [
-			'id',
+			'note_id',
 			'task', 
 			'due_time', 
 			'is_done',

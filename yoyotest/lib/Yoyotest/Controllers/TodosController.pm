@@ -2,11 +2,13 @@ use Yoyotest::Model::Repository;
 use Yoyotest::MenuService;
 use Yoyotest::Validators::TodoValidator;
 
-get '/api/todos' => sub { 
+my $todos_getter = sub {
+
 	my $username = session('user');
 	send_error("Please login first.", 401) unless $username;
 
 	my $search_filter = from_json(request->body)->{search_filter} if from_json(request->body);
+	$search_filter->{'note_id'} = route_parameters->{id} if route_parameters->{id};
 
 	my $todos = Yoyotest::Model::ModelServices::Todos
 		->new($schema)
@@ -15,9 +17,16 @@ get '/api/todos' => sub {
 		->get_todos
 		->get_output_data;
 
+	send_error("There are no records",404) unless $todos;
+
+	$todos = $todos->{data}[0] if route_parameters->{id};
+
 	send_as JSON => $todos, 
 		{ content_type => 'application/json; charset=UTF-8' };
 };
+
+get '/api/todos' => $todos_getter;
+get '/api/todos/:id' => $todos_getter;
 
 post '/api/todos' => sub { 
 	my $username = session('user');
