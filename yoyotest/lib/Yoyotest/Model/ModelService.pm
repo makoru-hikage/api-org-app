@@ -47,6 +47,8 @@ sub set_search_filter {
 	my $self = shift;
 	my $search_filter = shift;
 
+	return $self unless $search_filter;
+
 	$self->{search_filter} = $search_filter;
 	return $self;
 }
