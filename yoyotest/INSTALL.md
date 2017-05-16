@@ -6,7 +6,7 @@
 2. Do `git clone https://github.com/makoru-hikage/api-org-app`
 3. Assure that you have `Carton`, if you don't have, just do `cpan Carton`, it's your project package manager (like PHP's Composer)
 4. Traverse to the `api-org-app` folder (which resulted from git clone) then do `carton install`
-5. Once the installation finishes, run Plack by doing `plackup -p 3000`
+5. Once the installation finishes, run Plack by doing `plackup -p 3000` when you are in the `bin` folder. Everybody knows `bin`
 6. ????
 7. YEHEY!
 
