@@ -64,9 +64,11 @@ OR
 }
 ```
 
+
+
 ## API Resources
 
-NOTE: Route parameters are indicated as `:parameter`
+NOTE: Route parameters are indicated as `:parameter`. The CRUD resources of notes and todos cannot be accessed unless the user logs in. 
 
 ### Misc
 
@@ -84,7 +86,7 @@ No body is needed
 
 #### GET /api/notes
 
-You need a JSON body that has an item called "search_filter", which is a JSON of key-value pairs derived from form data.
+You need a JSON body that has an item called "search_filter", which is a JSON of key-value pairs derived from form data. Only what the logged in user owns will appear.
 
 Such as:
 ```
@@ -141,7 +143,7 @@ Search for a note to be converted to a todo. You'll need some data to input.
 
 #### GET /api/todos
 
-You need a JSON body that has an item called "search_filter", which is a JSON of key-value pairs derived from form data.
+You need a JSON body that has an item called "search_filter", which is a JSON of key-value pairs derived from form data. Only what the logged in user owns will appear.
 
 Such as:
 ```
