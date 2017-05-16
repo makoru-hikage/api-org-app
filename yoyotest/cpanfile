@@ -4,6 +4,8 @@ requires "Dancer2::Plugin::Passphrase" => "3.3.0";
 requires "Validation::Class" => "7.900057";
 requires "DBIx::Class::TimeStamp" => "0.14";
 requires "DBIx::Class" => "0.082840";
+requires "Dancer2::Session::Cookie" => "0.0006";
+requires "Plack::Middleware::Deflater" => "0.12";
 
 
 recommends "YAML"             => "0";
