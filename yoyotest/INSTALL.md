@@ -16,3 +16,5 @@
 3. ... AHHHHHHHHH to continue this list, see items 4-7 in Windows section.
 
 ASSURE THAT YOU HAVE MYSQL AND IMPORT THE `Yoyotest.sql` INTO IT, THEN KEEP IT RUNNING.
+
+Pssssssssst, the sample user is "cmoran" and her password is "eisley"
