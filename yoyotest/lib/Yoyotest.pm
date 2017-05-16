@@ -24,18 +24,18 @@ get '/' => sub {
 };
 
 #What happens after send_error is invoked.
-# hook init_error => sub {
-#     my $error = shift;
-#     status $error->status;
+hook init_error => sub {
+    my $error = shift;
+    status $error->status;
     
-#     send_as JSON => { 
-#     	message => $error->message,
-#     	status => $error->status,
-#     }, { content_type => 'application/json; charset=UTF-8' };
-# };
+    send_as JSON => { 
+    	message => $error->message,
+    	status => $error->status,
+    }, { content_type => 'application/json; charset=UTF-8' };
+};
 
 #A simple login using cookie sessions. See config.yml
-any ['put', 'post'] => '/login' => sub {
+any ['put', 'post'] => '/api/login' => sub {
 
 	send_as JSON => { message => "Still logged in"} if session('user');
 
@@ -61,7 +61,7 @@ any ['put', 'post'] => '/login' => sub {
 };
 
 #You see that right, any, any method.
-any '/logout' => sub {
+any '/api/logout' => sub {
 
 	session user => undef;
 	send_as JSON => { message => "You are now logged out."},
