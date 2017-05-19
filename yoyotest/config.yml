@@ -27,7 +27,6 @@ engines:
     template_toolkit:
       start_tag: '[%'
       end_tag:   '%]'
-      WRAPPER: layouts/main.tt
 
   session:
     Cookie:
