@@ -17,5 +17,5 @@
 <script type="text/javascript" src="[% request.uri_base %]/javascripts/polyfill.min.js"></script>
 <script type="text/javascript" src="[% request.uri_base %]/javascripts/list.min.js"></script>
 <script type="text/javascript" src="[% request.uri_base %]/javascripts/[% page_js %]"></script>
-<script type="text/javascript" src="[% request.uri_base %]/javascripts/bliss.shy.min.js"></script>
+<script type="text/javascript" src="[% request.uri_base %]/javascripts/bliss.min.js"></script>
 </html>

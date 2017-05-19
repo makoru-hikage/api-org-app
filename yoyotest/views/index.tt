@@ -11,10 +11,10 @@
 			<!-- MODE BUTTONS -->
 			<div class="col-md-4 col-xs-12 header" id="view-mode-panel">
 				<div class="btn-group pull-right" id="view-mode-btns">
-					<button class=" active" onclick="load_list_data()">
+					<button class="" onclick="load_notes_list_data()">
 						Ｎ Ｏ Ｔ Ｅ Ｓ
 					</button>
-					<button class="">
+					<button class="" onclick="load_todos_list_data()">
 						Ｔ Ｏ Ｄ Ｏ Ｓ
 					</button>
 				</div>

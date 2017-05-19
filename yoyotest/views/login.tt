@@ -21,7 +21,7 @@
 			<div class="col-md-3 buttons" id="login-buttons">
 				<button type="submit" onclick="login()">OK</button>
 				<br><br>
-				<button type="button">Cancel</button>
+				<button type="button" onclick="alert('Just close this tab, will ya?')">Cancel</button>
 				
 			</div>
 			
