@@ -3,7 +3,8 @@
 body {
 	overflow: hidden;
 	height: 100%;
-	background: #FF6AD5;
+	background-color: #FF6AD5;
+	background-image: url('/images/vaporgrid.jpg');
 }
 
 /*=*/
@@ -32,6 +33,7 @@ body {
 	display: inline;
 	vertical-align: middle;
 	font-weight: 900;
+	user-select: none;
 }
 
 #view-mode-panel {
@@ -45,6 +47,7 @@ body {
 
 #view-mode-btns {
 	display: inline-block;
+	user-select: none;
 }
 
 /*=*/
@@ -69,8 +72,7 @@ body {
 /*===*/
 
 #content-panel-header {
-	position: block;
-	display: flex;
+	user-select: none;
 }
 
 /*====*/
@@ -135,16 +137,17 @@ body {
 	width: 30%;
 	position: relative;
 	margin: 2px;
-	padding: 15px;
+	padding: 2px;
 	overflow: auto;
 	display: inline;
+	background-color: rgba(255,255,255,0.7);
 }
 
 /*===*/
 
-.sidebar-list-items {
+#sidebar-list-items {
 	display: block;
-	border: 1px solid #000;
+	
 	margin: 5px;
 	padding: 10px;
 
@@ -153,12 +156,12 @@ body {
 .sidebar-list-item {
 	position: relative;
 	display: block;
-	border: 1px solid #000;
-	padding: 10px;
+	padding: 5px;
 	margin: 5px;
 	height: 100%;
 	width: 100%;
 	display: flex;
+	background-color: rgba(173,140,255,0.7);
 }
 
 .list-item-info {
@@ -171,9 +174,7 @@ body {
 
 .list-item-title {
 	display: inline-block;
-	border: 1px solid #000;
 	margin: 2px auto;
-	padding: 1px;
 	width: 100%;
 	vertical-align: middle;
 }
@@ -181,9 +182,7 @@ body {
 .list-item-sub {
 
 	display: inline-block;
-	border: 1px solid #000;
 	margin: 2px auto;
-	padding: 1px;
 	width: 100%;
 	vertical-align: middle;
 }
@@ -195,39 +194,20 @@ body {
 	width: 20%;
 }
 
-#cancel-btn {
-	vertical-align: middle;
-}
-
-#save-btn {
-	vertical-align: middle;
-}
-
-.list-item-time {
-	color: ;
-}
-
-.list-item-title {
-
-}
-
-.list-item-sub {
-
-}
-
 ul.toolbar {
     list-style: none;
     padding: 2px 0;
     margin: 0;
+    user-select: none;
 }
 
-ul.toolbar li {
+ul.toolbar > li {
     display: inline-block;
     padding: 0 5px;
+    user-select: none;
 }
 
-ul.toolbar li:hover {
-    display: inline-block;
+ul.toolbar > li:hover {
     padding: 0 5px;
     border: 1px solid;
   	border-top-color: #dfdfdf;
@@ -236,10 +216,26 @@ ul.toolbar li:hover {
   	border-bottom-color: #808080;
 }
 
-ul.toolbar li:active {
+ul.toolbar > li:active {
   box-shadow: 1px 1px 0 0 #000 inset;
   border-top-color: #808080;
   border-left-color: #808080;
   border-right-color: #dfdfdf;
   border-bottom-color: #dfdfdf;
 }
+
+.is-done {
+	width: 20px;
+	height: 20px;
+	position: relative;
+	top: 50%;
+	left: 50%;
+}
+
+.is-done-box {
+	width: 20%;
+	height: 100%;
+}
+
+
+

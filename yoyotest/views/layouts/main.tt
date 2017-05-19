@@ -6,14 +6,16 @@
   <title>[% title %]</title>
   <link rel="stylesheet" href="[% request.uri_base %]/css/bootstrap.min.css">
   <link rel="stylesheet" href="[% request.uri_base %]/css/win98.css">
-  <link rel="stylesheet" href="[% request.uri_base %]/css/style.css">
-  
-  
+  <link rel="stylesheet" href="[% request.uri_base %]/css/[% page_css %]">
+
+ 
 </head>
 <body class="win98">
 [% content %]
-
 </body>
 <script type="text/javascript" src="[% request.uri_base %]/javascripts/bootstrap-native.min.js"></script>
 <script type="text/javascript" src="[% request.uri_base %]/javascripts/polyfill.min.js"></script>
+<script type="text/javascript" src="[% request.uri_base %]/javascripts/list.min.js"></script>
+<script type="text/javascript" src="[% request.uri_base %]/javascripts/[% page_js %]"></script>
+<script type="text/javascript" src="[% request.uri_base %]/javascripts/bliss.shy.min.js"></script>
 </html>

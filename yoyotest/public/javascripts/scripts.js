@@ -1,16 +1,20 @@
 
 /* Ajax for notes*/
-function load_list_data($search_filters){
-	var promise = $.fetch('/notes', {
+function load_list_data(search_filters){
+	var promise = Bliss.fetch('/api/notes', {
 		"method": "GET",
-		"data": { "search_filters": $search_filters }
-	}).then();
+		"data": null,
+		"headers": {
+		    "Content-type": "application/json",
+		    "X-requested-with": " XMLHttpRequest"
+		}
+	}).then((result)=>load_notes( result.data ));
 }
-function update_list_data($id, $input_data){
-	var promise = $.fetch('/notes/' + $id, {
+function update_notes_list_data($id, $input_data){
+	var promise = Bliss.fetch('/notes/' + $id, {
 		"method": "PUT",
 		"data": { "input_data": $input_data }
-	}).then();
+	}).then((result)=>load_notes( result.data ));
 }
 
 function create_list_data($input_data){
@@ -37,17 +41,8 @@ function convert_to_note(){
 
 }
 
-/* User authentication*/
-function user_login(){
-
-}
-
-function user_logout(){
-
-}
-
 /* GUI Item list functions */
-function load_notes($items){
+function load_notes(list_data){
 	var options = {
 	  valueNames: [
 	  	{ data: ['id'] },
@@ -56,15 +51,20 @@ function load_notes($items){
 		'creation_time'
 	  ],
 	  item: `<li class="sidebar-list-item">
-				<div class="col-md-12 list-item-info">
-					<span class="list-item-sub timestamp creation_time">I'm the timestamp</span>
-					<span class="list-item-title note_title"></span> 
-					<span class="list-item-sub">I'm the sub</span> 
-				</div>	
+				<div class="col-md-9">
+					<span class="list-item-time timestamp creation_time"></span>
+					<label class="list-item-title note_title">
+						
+					</label>
+					<span class="list-item-sub note_text"></span> 
+				</div>
+				<div class="col-md-3 is-done-box"><input type="checkbox" class="is-done"><div>
 			</li>`
 	};
 
-	var $list = new List(list_sidebar, options);
+	var list = new List('sidebar-panel', options);
+	list.add(list_data);
+
 
 }
 
