@@ -1,0 +1,81 @@
+body {
+	background-color: #007f80;
+}
+
+#login-window {
+	position: absolute;
+	
+	left: 30%;
+	top: 30%;
+	width: 500px;
+}
+
+
+#login-content span{
+	width: 72px;
+	display: inline-block;
+}
+
+#login-content{
+	display: block;
+	float: left;
+	width: 70%;
+	height: 167px;
+}
+
+#login-content input {
+	width: 216px;
+}
+
+#login-buttons button {
+	float: left;
+	width: 70px;
+	height: 18px;
+	padding: 1px;
+}
+
+#login-buttons  {
+	float: left;
+	width: 20%;
+	padding-top: 11px;
+	padding-right: 11px;
+}
+
+#login-icon {
+	position: absolute;
+	margin: 3px;
+	padding: 3px;
+	top: 50%;
+	left: 10%;
+
+}
+#login-icon-panel {
+
+	margin: 5px;
+	padding: 5px;
+	width: 30%;
+}
+
+.modal-content {
+	width: 170px;
+	height: 120px;
+	border-radius: 0px;
+
+
+}
+
+.login-message {
+	margin: 10px;
+	padding: 10px;
+	text-align: center;
+	vertical-align: center; 
+}
+
+.ok-btn {
+	text-align: center;
+	vertical-align: center; 
+	width: 70px;
+	height: 18px;
+	padding: 1px;
+}
+

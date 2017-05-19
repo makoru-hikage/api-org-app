@@ -1,0 +1,51 @@
+<div class="window" id="login-window" draggable="true" onload="initialize_modal()">
+	<div class="header" id="login-header">Welcome!</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-1 login-icon-panel">
+				<img src="images/keys.png" id="login-icon">
+			</div>
+			<div class="col-md-8" id="login-content">
+			
+				<br>Type a name to identify yourself. You need to enter a password.
+				<p>
+				<br>Tip: If you don't enter a password, you won't get an access.
+				<br>
+				<br><span><u>U</u>ser Name:</span>
+				<input type="text" name="username" id="username">
+				<br>
+				<br><span><u>P</u>assword:</span>
+				<input type="password" name="password" id="pass">
+				<br>
+			</div>
+			<div class="col-md-3 buttons" id="login-buttons">
+				<button type="submit" onclick="login()">OK</button>
+				<br><br>
+				<button type="button">Cancel</button>
+				
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="login-modal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content window">
+      <div class="header">
+	  		Placeholder, the Title of None
+			<div class="buttons">
+	          <button onclick="hide_modal()" data-dismiss="modal">X</button>
+	        </div>
+	        </div>
+	        <div class="login-message buttons">
+	        	<img src="images/error.png">
+	        	Username or password is invalid
+	        	<br>
+	        	<br>
+	        	<button class="ok-btn" type="submit" onclick="hide_modal()">OK</button>
+	        	<br>
+	        </div>
+    	</div>
+  </div>
+</div>
