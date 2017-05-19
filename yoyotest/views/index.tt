@@ -11,7 +11,7 @@
 			<!-- MODE BUTTONS -->
 			<div class="col-md-4 col-xs-12 header" id="view-mode-panel">
 				<div class="btn-group pull-right" id="view-mode-btns">
-					<button class=" active">
+					<button class=" active" onclick="load_list_data()">
 						Ｎ Ｏ Ｔ Ｅ Ｓ
 					</button>
 					<button class="">
@@ -30,50 +30,23 @@
 
 				<div class="row header" id="content-panel-header">
 				<img class='icon' src='/images/icons/txt.gif' srcset='/images/icons/txt@2x.gif 32w, /images/icons/txt@4x.gif 64w' />
-					<span>Placeholder, the Title of None</span>
+					Placeholder, the Title of None
+					<div class="buttons">
+			          <button onClick="javascript:window.location.href='/logout'">X</button>
+			        </div>
 				</div>
-				<ul class="toolbar">
-				    <li><u>F</u>ile</li>
-				    <li><u>E</u>dit</li>
-				    <li><u>V</u>iew</li>
-				    <li><u>H</u>elp</li>
-				</ul>
-
-
+					<ul class="toolbar">
+						<li><u>F</u>ile</li>
+						<li><u>E</u>dit</li>
+						<li><u>S</u>earch</li>
+						<li><u>H</u>elp</li>
+					</ul>
 					<textarea id="textarea-content"></textarea>
 
 			</div>
 				<!-- THE LIST SIDEBAR -->
 			<div class="col-md-4 col-xs-12" id="sidebar-panel">
-				<ul class="sidebar-list-items nav navbar-nav">
-					<li class="sidebar-list-item">
-						
-						<div class="col-md-10 list-item-info">
-							<span class="list-item-title">I'm the title</span> 
-							<span class="list-item-sub">I'm the sub</span> 
-						</div>
-						<div class="col-md-2 list-item-check">
-							<div class="item-is-done">OK</div>
-						</div>
-						
-					</li>
-					<li class="sidebar-list-item">
-						<div class="col-md-10 list-item-info">
-							<span class="list-item-title">I'm the title</span> 
-							<span class="list-item-sub">I'm the sub</span> 
-						</div>
-						<div class="col-md-2 list-item-check">
-							<div class="item-is-done">OK</div>
-						</div>
-					</li>
-
-					<li class="sidebar-list-item">
-						<div class="col-md-12 list-item-info">
-							<span class="list-item-time timestamp creation_time">I'm the timestamp</span>
-							<span class="list-item-title note_title">I'm the title</span> 
-							<span class="list-item-sub">I'm the sub</span> 
-						</div>	
-					</li>
+				<ul class=" nav navbar-nav list" id="sidebar-list-items">				
 				</ul>
 			</div>			
 		</div>
