@@ -1,3 +1,5 @@
+window.onload = (e) => load_notes_list_data();
+
 
 /* Ajax for notes*/
 function load_notes_list_data(){
@@ -8,7 +10,8 @@ function load_notes_list_data(){
 		    "Content-type": "application/json",
 		    "X-requested-with": " XMLHttpRequest"
 		}
-	}).then((xhr)=>load_notes(JSON.parse(xhr.response).data), ()=>alert('aw'));
+	}).then( (xhr) => { $('#view-title').innerHTML = "Ｎ Ｏ Ｔ Ｅ Ｓ"; return xhr; } )
+	.then((xhr)=>load_notes(JSON.parse(xhr.response).data), ()=>alert('Notes failed to load'));
 }
 
 /* Ajax for todos*/
@@ -20,7 +23,9 @@ function load_todos_list_data(){
 		    "Content-type": "application/json",
 		    "X-requested-with": " XMLHttpRequest"
 		}
-	}).then((xhr)=>load_todos(JSON.parse(xhr.response).data), ()=>alert('aw'));
+	}).then( (xhr) => { $('#view-title').innerHTML = "Ｔ Ｏ Ｄ Ｏ Ｓ"; return xhr; } )
+	.then((xhr)=>load_todos(JSON.parse(xhr.response).data), ()=>alert('Todos failed to load'));
+
 }
 
 function update_notes_list_data($id, $input_data){
@@ -141,12 +146,5 @@ function edit_note_window(){
 
 function new_note_window(){
 
-}
-
-function load_done_checkbox(e){
-	var is_done = e.target.value > 0;
-	if (is_done){
-		e.target.checked = true;
-	}
 }
 

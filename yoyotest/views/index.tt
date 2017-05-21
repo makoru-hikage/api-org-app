@@ -5,7 +5,7 @@
 			<!-- TITLE -->
 			<div class="col-md-8 col-xs-12" id="top-header">
 				<h2 id="view-title">
-					Ｎ Ｏ Ｔ Ｅ Ｓ
+					Ｎ Ｏ Ｔ Ｅ Ｓ 
 				</h2>
 			</div>
 			<!-- MODE BUTTONS -->
@@ -35,17 +35,26 @@
 			          <button onClick="javascript:window.location.href='/logout'">X</button>
 			        </div>
 				</div>
+				<div id="menu-bar">
 					<ul class="toolbar">
-						<li><u>F</u>ile</li>
+						<li><u>N</u>ew</li>
 						<li><u>E</u>dit</li>
-						<li><u>S</u>earch</li>
+						<li><u>D</u>elete</li>
 						<li><u>H</u>elp</li>
 					</ul>
-					<textarea id="textarea-content"></textarea>
+				</div>
+				<div id="task-bar">
+					<div>
+						<label for="task" style="padding-right:10px;">Task:</label>
+						<input type="text" name="task" max="50" size="100%">
+					</div>	
+				</div>
+
+					<textarea id="textarea-content" data-id="0"></textarea>
 
 			</div>
 				<!-- THE LIST SIDEBAR -->
-			<div class="col-md-4 col-xs-12" id="sidebar-panel">
+			<div class="col-md-4 col-xs-12" id="sidebar-panel" onload="load_notes_list_data()">
 				<ul class=" nav navbar-nav list" id="sidebar-list-items">				
 				</ul>
 			</div>			

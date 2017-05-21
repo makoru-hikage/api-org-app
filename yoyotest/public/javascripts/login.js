@@ -18,9 +18,7 @@ function login(){
 }
 
 function initialize_modal (){
-	var $login_modal = Bliss('#login-modal');
-
-	
+	var $login_modal = Bliss('#login-modal');	
 }
 
 function show_modal(){
