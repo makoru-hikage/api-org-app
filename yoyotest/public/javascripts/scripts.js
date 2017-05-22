@@ -1,7 +1,8 @@
 window.onload = (e) => load_notes_list_data();
+var sidebar_list;
 
 
-/* Ajax for notes*/
+/* Functions for loading entries*/
 function load_notes_list_data(){
 	var promise = $.fetch('/api/notes', {
 		"method": "GET",
@@ -10,11 +11,12 @@ function load_notes_list_data(){
 		    "Content-type": "application/json",
 		    "X-requested-with": " XMLHttpRequest"
 		}
-	}).then( (xhr) => { $('#view-title').innerHTML = "Ｎ Ｏ Ｔ Ｅ Ｓ"; return xhr; } )
+	}).then( (xhr) => { $('title').innerHTML = $('#view-title').innerHTML = "Ｎ Ｏ Ｔ Ｅ Ｓ"; return xhr; } )
+	.then( (xhr) => { note_fill_notepad(JSON.parse(xhr.response).data[0]); return xhr; } )
 	.then((xhr)=>load_notes(JSON.parse(xhr.response).data), ()=>alert('Notes failed to load'));
 }
 
-/* Ajax for todos*/
+
 function load_todos_list_data(){
 	var promise = $.fetch('/api/todos', {
 		"method": "GET",
@@ -23,40 +25,49 @@ function load_todos_list_data(){
 		    "Content-type": "application/json",
 		    "X-requested-with": " XMLHttpRequest"
 		}
-	}).then( (xhr) => { $('#view-title').innerHTML = "Ｔ Ｏ Ｄ Ｏ Ｓ"; return xhr; } )
+	}).then( (xhr) => { $('title').innerHTML = $('#view-title').innerHTML = "Ｔ Ｏ Ｄ Ｏ Ｓ"; return xhr; } )
+	.then( (xhr) => { todo_fill_notepad(JSON.parse(xhr.response).data[0]); return xhr; } )
 	.then((xhr)=>load_todos(JSON.parse(xhr.response).data), ()=>alert('Todos failed to load'));
-
 }
 
-function update_notes_list_data($id, $input_data){
-	var promise = $.fetch('/notes/' + $id, {
-		"method": "PUT",
-		"data": { "input_data": $input_data }
-	}).then((result)=>load_notes( result.data ));
+/* Functions for filling the notepad */
+function pick_one_note(e){
+	var list_item_id = e.target.closest('li').dataset.id;
+
+	var promise = $.fetch('/api/notes/'+list_item_id, {
+		"method": "GET",
+		"data": null,
+		"headers": {
+		    "Content-type": "application/json",
+		    "X-requested-with": " XMLHttpRequest"
+		}
+	}).then((xhr)=>note_fill_notepad(JSON.parse(xhr.response).data), ()=>alert('Note failed to load'));
 }
 
-function create_list_data($input_data){
-	var promise = $.fetch('/notes', {
-		"method": "POST",
-		"data": { "input_data": $input_data }
-	}).then();
+function pick_one_todo(e){
+	var list_item_id = e.target.closest('li').dataset.note_id;
+
+	var promise = $.fetch('/api/todos/'+list_item_id, {
+		"method": "GET",
+		"data": null,
+		"headers": {
+		    "Content-type": "application/json",
+		    "X-requested-with": " XMLHttpRequest"
+		}
+	}).then((xhr)=>todo_fill_notepad(JSON.parse(xhr.response).data), ()=>alert('Note failed to load'));
 }
 
-function delete_list_data($id){
-	var promise = $.fetch('/notes' + $id, {
-		"method": "DELETE",
-	}).then();
-}
+function delete_note(){
+	var delete_confirmed = confirm("Are you sure?");
+	var note_id = $('#note-title').dataset.id;
+	var entity = $('#note-title').dataset.entity;
+	var list_index = entity == 'todo' ? 'note_id' : 'id';
 
-
-
-/* Conversions */
-function convert_to_todo(){
-
-}
-
-function convert_to_note(){
-
+	if (delete_confirmed){
+		var promise = $.fetch('/api/'+entity+'s/' + note_id, {
+			"method": "DELETE",
+		}).then((xhr)=>sidebar_list.remove(list_index, note_id), ()=>alert('Failed to be deleted'));
+	}
 }
 
 /* GUI Item list functions */
@@ -72,7 +83,7 @@ function load_notes(list_data){
 	  item: `<li class="sidebar-list-item">
 				<div class="col-md-9">
 					<span class="list-item-time timestamp creation_time"></span>
-					<label class="list-item-title note_title">
+					<label class="list-item-title note_title" onclick="pick_one_note(event)">
 						
 					</label>
 					<span class="list-item-sub note_text"></span> 
@@ -81,8 +92,8 @@ function load_notes(list_data){
 			</li>`
 	};
 
-	var list = new List('sidebar-panel', options);
-	list.add(list_data);
+	sidebar_list = new List('sidebar-panel', options);
+	sidebar_list.add(list_data);
 
 }
 
@@ -103,10 +114,10 @@ function load_todos(list_data){
 	  ],
 	  item: `<li class="sidebar-list-item">
 				<div class="col-md-9">
-					<span class="list-item-time timestamp creation_time"></span>
-					<span class="list-item-sub due_time"></span> 
-					<label class="list-item-title task">
+					<span class="list-item-time creation_time"></span>
+					<label class="list-item-title task" onclick="pick_one_todo(event)">
 					</label>
+					<span class="list-item-sub due_time"></span> 
 					
 				</div>
 				<div class="col-md-3 is-done-box"><input class="is_done" type="checkbox" name="is_done" ><div>
@@ -114,37 +125,74 @@ function load_todos(list_data){
 		indexAsync : true
 	};
 
-	var list = new List('sidebar-panel', options);
+	sidebar_list = new List('sidebar-panel', options);
 
-	list.add(list_data);
+	sidebar_list.add(list_data);
 
 	$$('.sidebar-list-item .is-done-box .is_done').forEach( (item) => {
 		if (item.value > 0){ item.checked = "true"; }
 	});
 }
 
-function add_item(){
 
+/* Note event functions */
+function note_fill_notepad(list_item){
+	$('#task-field').style.display = 'none';
+	$('#d_d').style.display = 'none';
+	$('#textarea-content').style.height = "83%";
+
+	var title_bar = list_item.note_title + " (" + list_item.creation_time +")";
+	$('#note-title').innerHTML = title_bar;
+	$('#note-title').dataset.id = list_item.id;
+	$('#note-title').dataset.entity = 'note';
+
+	$('#note-title-field').value = list_item.note_title;
+	$('#textarea-content').value = list_item.note_text  || '';
 }
 
-function remove_item(){
+function todo_fill_notepad(list_item){
+	notepad_mode('todo');
+	
+	var title_bar = list_item.note_title + " (" + list_item.creation_time +")";
+	$('#note-title').innerHTML = title_bar;
+	$('#note-title').dataset.id = list_item.note_id;
+	$('#note-title').dataset.entity = 'todo';
 
+	$('#note-title-field').value = list_item.note_title;
+	$('#textarea-content').value = list_item.note_text || '';
+	$('#todo-target-field').innerHTML = list_item.target_datetime || '';
+	$('#todo-task-field').value = list_item.task;
+	if (list_item.is_done) {
+		$('#todo-is-done-field').setAttribute('checked', 'true');
+	} else {
+		$('#todo-is-done-field').removeAttribute('checked');
+	}
 }
 
-function update_item(){
+function reset_notepad(){
 
+	var title_bar = '';
+	$('#note-title').innerHTML = '';
+	$('#note-title').dataset.id = '0';
+
+	$('#note-title-field').value = '';
+	$('#textarea-content').value = '';
+	$('#todo-target-field').innerHTML = '';
+	$('#todo-task-field').value = '';
+	$('#todo-is-done-field').removeAttribute('checked');
+	
 }
 
-/* GUI events */
-function switch_to_todos(){
-
+function notepad_mode (mode) {
+	switch (mode) {
+		case 'todo':
+			$('#task-field').style.display = 'block';
+			$('#d_d').style.display = 'block';
+			$('#textarea-content').style.height = "74%";
+			break;
+		default:
+			$('#task-field').style.display = 'none';
+			$('#d_d').style.display = 'none';
+			$('#textarea-content').style.height = "83%";
+	}
 }
-
-function edit_note_window(){
-
-}
-
-function new_note_window(){
-
-}
-
