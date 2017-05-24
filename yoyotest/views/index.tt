@@ -29,28 +29,43 @@
 				<!-- THE CONTENT PANEL HEADER SECTION -->
 
 				<div class="row header" id="content-panel-header">
-				<img class='icon' src='/images/icons/txt.gif' srcset='/images/icons/txt@2x.gif 32w, /images/icons/txt@4x.gif 64w' />
-					Placeholder, the Title of None
+					<img class='icon' src='/images/icons/txt.gif' srcset='/images/icons/txt@2x.gif 32w, /images/icons/txt@4x.gif 64w' />
+					<span id="note-title" data-id="0" data-entity="none">No note is loaded</span>
 					<div class="buttons">
 			          <button onClick="javascript:window.location.href='/logout'">X</button>
 			        </div>
 				</div>
+
 				<div id="menu-bar">
 					<ul class="toolbar">
-						<li><u>N</u>ew</li>
-						<li><u>E</u>dit</li>
-						<li><u>D</u>elete</li>
+						<li onclick="reset_notepad()"><u>N</u>ew</li>
+						<li><u>S</u>ave</li>
+						<li onclick="delete_note()"><u>D</u>elete</li>
 						<li><u>H</u>elp</li>
 					</ul>
 				</div>
+
 				<div id="task-bar">
 					<div>
+						<label for="title" style="padding-right:10px;">Title:</label>
+						<input id="note-title-field" type="text" name="note_title" max="50" size="60">
+					</div>
+
+					<div id="task-field">
 						<label for="task" style="padding-right:10px;">Task:</label>
-						<input type="text" name="task" max="50" size="100%">
+						<input id="todo-task-field" type="text" name="task" max="50" size="60">
+					</div>
+
+					<div id="d_d">
+						<label for="target_datetime" style="padding-right:10px;">Due:</label> <input name="target_datetime" id="todo-target-field">
+						<div class="pull-right">
+							<label  for="is_done" style="vertical-align: 50%;padding-right:10px;"> Done: </label>
+							<input  id="todo-is-done-field" type="checkbox" name="is_done" style="width:20px; height:20px;">
+						</div>
 					</div>	
 				</div>
 
-					<textarea id="textarea-content" data-id="0"></textarea>
+					<textarea id="textarea-content" data-id="0" name="note_text"></textarea>
 
 			</div>
 				<!-- THE LIST SIDEBAR -->
