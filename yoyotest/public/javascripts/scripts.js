@@ -1,5 +1,12 @@
 window.onload = (e) => load_notes_list_data();
 var sidebar_list;
+var notepad_data_buffer = {
+	"note_title": "",
+	"note_text": "",
+	"task": "",
+	"target_datetime": "",
+	"is_done": 0
+}
 
 
 /* Functions for loading entries*/
@@ -13,6 +20,7 @@ function load_notes_list_data(){
 		}
 	}).then( (xhr) => { $('title').innerHTML = $('#view-title').innerHTML = "Ｎ Ｏ Ｔ Ｅ Ｓ"; return xhr; } )
 	.then( (xhr) => { note_fill_notepad(JSON.parse(xhr.response).data[0]); return xhr; } )
+	.then((xhr)=>{ fill_buffer(JSON.parse(xhr.response).data[0]); return xhr; }, ()=>alert('Failed to load buffer'))
 	.then((xhr)=>load_notes(JSON.parse(xhr.response).data), ()=>alert('Notes failed to load'));
 }
 
@@ -27,6 +35,7 @@ function load_todos_list_data(){
 		}
 	}).then( (xhr) => { $('title').innerHTML = $('#view-title').innerHTML = "Ｔ Ｏ Ｄ Ｏ Ｓ"; return xhr; } )
 	.then( (xhr) => { todo_fill_notepad(JSON.parse(xhr.response).data[0]); return xhr; } )
+	.then((xhr)=>{ fill_buffer(JSON.parse(xhr.response).data[0]); return xhr; }, ()=>alert('Failed to load buffer'))
 	.then((xhr)=>load_todos(JSON.parse(xhr.response).data), ()=>alert('Todos failed to load'));
 }
 
@@ -41,7 +50,9 @@ function pick_one_note(e){
 		    "Content-type": "application/json",
 		    "X-requested-with": " XMLHttpRequest"
 		}
-	}).then((xhr)=>note_fill_notepad(JSON.parse(xhr.response).data), ()=>alert('Note failed to load'));
+	})
+	.then((xhr)=>{ note_fill_notepad(JSON.parse(xhr.response).data); return xhr; }, ()=>alert('Failed to load note'))
+	.then((xhr)=>{ fill_buffer(JSON.parse(xhr.response).data); return xhr; }, ()=>alert('Failed to load buffer'));
 }
 
 function pick_one_todo(e){
@@ -54,7 +65,9 @@ function pick_one_todo(e){
 		    "Content-type": "application/json",
 		    "X-requested-with": " XMLHttpRequest"
 		}
-	}).then((xhr)=>todo_fill_notepad(JSON.parse(xhr.response).data), ()=>alert('Note failed to load'));
+	})
+	.then((xhr)=>{ todo_fill_notepad(JSON.parse(xhr.response).data); return xhr; }, ()=>alert('Failed to load todo'))
+	.then((xhr)=>{ fill_buffer(JSON.parse(xhr.response).data); return xhr; }, ()=>alert('Failed to load buffer'));
 }
 
 function delete_note(){
@@ -160,7 +173,7 @@ function todo_fill_notepad(list_item){
 
 	$('#note-title-field').value = list_item.note_title;
 	$('#textarea-content').value = list_item.note_text || '';
-	$('#todo-target-field').innerHTML = list_item.target_datetime || '';
+	$('#todo-target-field').value = list_item.target_datetime || '';
 	$('#todo-task-field').value = list_item.task;
 	if (list_item.is_done) {
 		$('#todo-is-done-field').setAttribute('checked', 'true');
@@ -177,7 +190,7 @@ function reset_notepad(){
 
 	$('#note-title-field').value = '';
 	$('#textarea-content').value = '';
-	$('#todo-target-field').innerHTML = '';
+	$('#todo-target-field').value = '';
 	$('#todo-task-field').value = '';
 	$('#todo-is-done-field').removeAttribute('checked');
 	
@@ -195,4 +208,44 @@ function notepad_mode (mode) {
 			$('#d_d').style.display = 'none';
 			$('#textarea-content').style.height = "83%";
 	}
+}
+
+function check_changes (){
+	var data_buffer = notepad_data_buffer;
+
+	var columns = [
+		"note_title",
+		"note_content",
+		"task",
+		"target_datetime",
+		"is_done"
+	];
+
+	var notepad_data = {
+		"note_title": $('#note-title-field').value,
+		"note_text": $('#textarea-content').value,
+		"task": $('#todo-task-field').value,
+		"target_datetime": $('#todo-target-field').value,
+		"is_done": $('#todo-is-done-field').checked ? 1 : 0
+	};
+
+	var input_data = {};
+
+	for(var column in data_buffer) {
+        if (notepad_data[column] != data_buffer[column] && data_buffer[column] !== undefined) {
+        	input_data[column] = notepad_data[column];
+        }
+    }
+
+	return input_data;
+}
+
+function fill_buffer(item_data){
+
+	for(var column in notepad_data_buffer) {
+		if (item_data[column] === null ) { item_data[column] = ""; }
+		notepad_data_buffer[column] = item_data[column];
+
+        
+    }
 }
