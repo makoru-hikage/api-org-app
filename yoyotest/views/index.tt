@@ -30,7 +30,7 @@
 
 				<div class="row header" id="content-panel-header">
 					<img class='icon' src='/images/icons/txt.gif' srcset='/images/icons/txt@2x.gif 32w, /images/icons/txt@4x.gif 64w' />
-					<span id="note-title" data-id="0" data-entity="none">No note is loaded</span>
+					<span id="note-title" data-id="0" data-entity="note">No note is loaded</span>
 					<div class="buttons">
 			          <button onClick="javascript:window.location.href='/logout'">X</button>
 			        </div>
@@ -39,8 +39,9 @@
 				<div id="menu-bar">
 					<ul class="toolbar">
 						<li onclick="reset_notepad()"><u>N</u>ew</li>
-						<li><u>S</u>ave</li>
+						<li onclick="save_data()"><u>S</u>ave</li>
 						<li onclick="delete_note()"><u>D</u>elete</li>
+						<li onclick=""><u>C</u>onvert</li>
 						<li><u>H</u>elp</li>
 					</ul>
 				</div>

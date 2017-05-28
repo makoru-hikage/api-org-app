@@ -6,7 +6,7 @@ var notepad_data_buffer = {
 	"task": "",
 	"target_datetime": "",
 	"is_done": 0
-}
+};
 
 
 /* Functions for loading entries*/
@@ -18,9 +18,20 @@ function load_notes_list_data(){
 		    "Content-type": "application/json",
 		    "X-requested-with": " XMLHttpRequest"
 		}
-	}).then( (xhr) => { $('title').innerHTML = $('#view-title').innerHTML = "Ｎ Ｏ Ｔ Ｅ Ｓ"; return xhr; } )
-	.then( (xhr) => { note_fill_notepad(JSON.parse(xhr.response).data[0]); return xhr; } )
-	.then((xhr)=>{ fill_buffer(JSON.parse(xhr.response).data[0]); return xhr; }, ()=>alert('Failed to load buffer'))
+	}).then((xhr) => { 
+		$('title').innerHTML = "Ｎ Ｏ Ｔ Ｅ Ｓ";
+		$('#view-title').innerHTML = "Ｎ Ｏ Ｔ Ｅ Ｓ"; 
+		$('#note-title').dataset.entity = 'note';
+		return xhr; 
+	}, ()=>alert('Failed to fetch data'))
+	.then((xhr) => { 
+		note_fill_notepad(JSON.parse(xhr.response).data[0]); 
+		return xhr; 
+	}, ()=>alert('Failed to fill notepad'))
+	.then((xhr)=>{ 
+		fill_buffer(JSON.parse(xhr.response).data[0]); 
+		return xhr; 
+	}, ()=>alert('Failed to load buffer'))
 	.then((xhr)=>load_notes(JSON.parse(xhr.response).data), ()=>alert('Notes failed to load'));
 }
 
@@ -33,17 +44,48 @@ function load_todos_list_data(){
 		    "Content-type": "application/json",
 		    "X-requested-with": " XMLHttpRequest"
 		}
-	}).then( (xhr) => { $('title').innerHTML = $('#view-title').innerHTML = "Ｔ Ｏ Ｄ Ｏ Ｓ"; return xhr; } )
-	.then( (xhr) => { todo_fill_notepad(JSON.parse(xhr.response).data[0]); return xhr; } )
-	.then((xhr)=>{ fill_buffer(JSON.parse(xhr.response).data[0]); return xhr; }, ()=>alert('Failed to load buffer'))
+	}).then((xhr) => { 
+		$('title').innerHTML = "Ｔ Ｏ Ｄ Ｏ Ｓ";
+		$('#view-title').innerHTML = "Ｔ Ｏ Ｄ Ｏ Ｓ"; 
+		$('#note-title').dataset.entity = 'todo';
+		return xhr; 
+	}, ()=>alert('Failed to fetch data'))
+	.then((xhr) => { 
+		todo_fill_notepad(JSON.parse(xhr.response).data[0]); 
+		return xhr; 
+	}, ()=>alert('Failed to fill notepad'))
+	.then((xhr)=>{ 
+		fill_buffer(JSON.parse(xhr.response).data[0]); 
+		return xhr; 
+	}, ()=>alert('Failed to load buffer'))
 	.then((xhr)=>load_todos(JSON.parse(xhr.response).data), ()=>alert('Todos failed to load'));
+}
+
+function refresh_list(){
+
+	var mode = $('#note-title').dataset.entity;
+	var id = $('#note-title').dataset.id;
+
+	var promise = $.fetch('/api/'+ mode +'s', {
+		"method": "GET",
+		"data": null,
+		"headers": {
+		    "Content-type": "application/json",
+		    "X-requested-with": " XMLHttpRequest"
+		}
+	}).then((xhr)=>load_notes(JSON.parse(xhr.response).data), ()=>alert('Notes failed to load'));
 }
 
 /* Functions for filling the notepad */
 function pick_one_note(e){
 	var list_item_id = e.target.closest('li').dataset.id;
 
-	var promise = $.fetch('/api/notes/'+list_item_id, {
+	load_one_note(list_item_id);
+}
+
+function load_one_note(id){
+
+	var promise = $.fetch('/api/notes/'+id, {
 		"method": "GET",
 		"data": null,
 		"headers": {
@@ -58,7 +100,12 @@ function pick_one_note(e){
 function pick_one_todo(e){
 	var list_item_id = e.target.closest('li').dataset.note_id;
 
-	var promise = $.fetch('/api/todos/'+list_item_id, {
+	load_one_todo(list_item_id);
+}
+
+function load_one_todo(id){
+
+	var promise = $.fetch('/api/todos/'+id, {
 		"method": "GET",
 		"data": null,
 		"headers": {
@@ -75,11 +122,13 @@ function delete_note(){
 	var note_id = $('#note-title').dataset.id;
 	var entity = $('#note-title').dataset.entity;
 	var list_index = entity == 'todo' ? 'note_id' : 'id';
+	var what_to_load = entity === 'note' ? load_notes_list_data : load_todos_list_data;
 
 	if (delete_confirmed){
 		var promise = $.fetch('/api/'+entity+'s/' + note_id, {
 			"method": "DELETE",
-		}).then((xhr)=>sidebar_list.remove(list_index, note_id), ()=>alert('Failed to be deleted'));
+		}).then((xhr)=>sidebar_list.remove(list_index, note_id), ()=>alert('Failed to be deleted'))
+		.then((xhr)=>what_to_load(), ()=>alert('Failed to be deleted'));
 	}
 }
 
@@ -118,7 +167,7 @@ function load_todos(list_data){
 	  valueNames: [
 	  	{ data: ['note_id'] },
 	  	"task",
-		"due_time",
+		"target_datetime",
 		"task_started",
 		"creation_time",
 		"username",
@@ -130,10 +179,10 @@ function load_todos(list_data){
 					<span class="list-item-time creation_time"></span>
 					<label class="list-item-title task" onclick="pick_one_todo(event)">
 					</label>
-					<span class="list-item-sub due_time"></span> 
+					<span class="list-item-sub target_datetime"></span> 
 					
 				</div>
-				<div class="col-md-3 is-done-box"><input class="is_done" type="checkbox" name="is_done" ><div>
+				<div class="col-md-3 is-done-box"><input class="is_done" type="checkbox" name="is_done" onchange="toggle_done(event)"><div>
 			</li>`,
 		indexAsync : true
 	};
@@ -184,6 +233,14 @@ function todo_fill_notepad(list_item){
 
 function reset_notepad(){
 
+	notepad_data_buffer = {
+		"note_title": "",
+		"note_text": "",
+		"task": "",
+		"target_datetime": "",
+		"is_done": 0
+	}
+
 	var title_bar = '';
 	$('#note-title').innerHTML = '';
 	$('#note-title').dataset.id = '0';
@@ -193,7 +250,9 @@ function reset_notepad(){
 	$('#todo-target-field').value = '';
 	$('#todo-task-field').value = '';
 	$('#todo-is-done-field').removeAttribute('checked');
-	
+
+	var mode = $('#note-title').dataset.entity;
+	notepad_mode (mode);
 }
 
 function notepad_mode (mode) {
@@ -245,7 +304,89 @@ function fill_buffer(item_data){
 	for(var column in notepad_data_buffer) {
 		if (item_data[column] === null ) { item_data[column] = ""; }
 		notepad_data_buffer[column] = item_data[column];
-
         
     }
 }
+
+function save_data (event) {
+	var id = $('#note-title').dataset.id;
+	var mode = $('#note-title').dataset.entity;
+
+	var method = id > 0 ? 'PUT' : 'POST';
+	var identifier = mode == 'note' ? 'id' : 'note_id';
+	var input_data = check_changes();
+
+	if (Object.keys(input_data).length === 0 && input_data.constructor === Object) {
+		return 0;
+	}
+
+	var prepared_data = {
+		"title": input_data.note_title,
+		"content": input_data.note_text,
+		"task": input_data.task,
+		"target_datetime": input_data.target_datetime,
+		"is_done": input_data.is_done
+	};
+
+	if (mode === 'note') {
+		for(var column in prepared_data) {
+			if (! ["content", "title"].includes(column)) {
+				delete prepared_data[column];
+			}
+    	}
+	}
+
+	prepared_data = { "input_data": prepared_data };
+
+	var action;
+	var what_to_load = mode === 'note' ? load_notes_list_data : load_todos_list_data;
+
+	switch (method) {
+		case 'POST':
+			action =  (xhr) => what_to_load();
+			alert("File created");
+			break;
+		case 'PUT':
+			action =  (xhr) => {
+				if (mode === 'note'){
+					load_one_note(id);
+				} else {
+					load_one_todo(id);
+				}
+				refresh_list();
+			};
+			alert("File updated");
+			break;
+		default:
+			alert("Action can\'t be done. Wrong METHOD");
+			return 0;
+	}
+
+	var url_path = id > 0 ? '/api/'+ mode +'s/'+id : '/api/'+ mode +'s';
+
+	var promise = $.fetch(url_path, {
+		"method": method,
+		"data": JSON.stringify(prepared_data),
+		"headers": {
+		    "Content-type": "application/json",
+		    "X-requested-with": " XMLHttpRequest"
+		}
+	}).then(action, ()=>alert('Action can\'t be done.'));
+}
+
+function toggle_done (e){
+	var is_done = e.target.checked ? 1 : 0;
+	var method = is_done > 0 ? 'POST' : 'DELETE';
+	var message = is_done > 0 ? 'It\'s marked as done' : 'It\'s marked as un-done';
+	var id = e.target.closest('li').dataset.note_id;
+
+	var promise = $.fetch('/api/todos/'+id+'/done', {
+		"method": method,
+		"data": null,
+		"headers": {
+		    "Content-type": "application/json",
+		    "X-requested-with": " XMLHttpRequest"
+		}
+	}).then((xhr)=>alert(message), ()=>alert('Request failed'));
+}
+
