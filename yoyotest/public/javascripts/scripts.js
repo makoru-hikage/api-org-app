@@ -262,10 +262,13 @@ function notepad_mode(mode) {
 			$('#d_d').style.display = 'block';
 			$('#textarea-content').style.height = "74%";
 			break;
-		default:
+		case 'note':
 			$('#task-field').style.display = 'none';
 			$('#d_d').style.display = 'none';
 			$('#textarea-content').style.height = "83%";
+			break;
+		default:
+			alert('Invalid mode');
 	}
 }
 
@@ -389,4 +392,3 @@ function toggle_done(e){
 		}
 	}).then((xhr)=>alert(message), ()=>alert('Request failed'));
 }
-
