@@ -255,7 +255,7 @@ function reset_notepad(){
 	notepad_mode (mode);
 }
 
-function notepad_mode (mode) {
+function notepad_mode(mode) {
 	switch (mode) {
 		case 'todo':
 			$('#task-field').style.display = 'block';
@@ -269,7 +269,7 @@ function notepad_mode (mode) {
 	}
 }
 
-function check_changes (){
+function check_changes(){
 	var data_buffer = notepad_data_buffer;
 
 	var columns = [
@@ -308,7 +308,7 @@ function fill_buffer(item_data){
     }
 }
 
-function save_data (event) {
+function save_data(event) {
 	var id = $('#note-title').dataset.id;
 	var mode = $('#note-title').dataset.entity;
 
@@ -343,11 +343,11 @@ function save_data (event) {
 
 	switch (method) {
 		case 'POST':
-			action =  (xhr) => what_to_load();
+			action = (xhr) => what_to_load();
 			alert("File created");
 			break;
 		case 'PUT':
-			action =  (xhr) => {
+			action = (xhr) => {
 				if (mode === 'note'){
 					load_one_note(id);
 				} else {
@@ -374,7 +374,7 @@ function save_data (event) {
 	}).then(action, ()=>alert('Action can\'t be done.'));
 }
 
-function toggle_done (e){
+function toggle_done(e){
 	var is_done = e.target.checked ? 1 : 0;
 	var method = is_done > 0 ? 'POST' : 'DELETE';
 	var message = is_done > 0 ? 'It\'s marked as done' : 'It\'s marked as un-done';
