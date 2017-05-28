@@ -207,6 +207,7 @@ function note_fill_notepad(list_item){
 	$('#note-title').innerHTML = title_bar;
 	$('#note-title').dataset.id = list_item.id;
 	$('#note-title').dataset.entity = 'note';
+	$('#note-title').dataset.converting = 'false';
 
 	$('#note-title-field').value = list_item.note_title;
 	$('#textarea-content').value = list_item.note_text  || '';
@@ -219,6 +220,7 @@ function todo_fill_notepad(list_item){
 	$('#note-title').innerHTML = title_bar;
 	$('#note-title').dataset.id = list_item.note_id;
 	$('#note-title').dataset.entity = 'todo';
+	$('#note-title').dataset.converting = 'false';
 
 	$('#note-title-field').value = list_item.note_title;
 	$('#textarea-content').value = list_item.note_text || '';
@@ -391,4 +393,82 @@ function toggle_done(e){
 		    "X-requested-with": " XMLHttpRequest"
 		}
 	}).then((xhr)=>alert(message), ()=>alert('Request failed'));
+}
+
+function convert_note(){
+
+	var id = $('#note-title').dataset.id;
+
+	var input_data = {
+		"input_data" : {
+			"task" : $('#todo-task-field').value,
+			"target_datetime" : $('#todo-target-field').value 
+		}
+	};
+
+	var promise = $.fetch('/api/notes/'+id+'/convert', {
+		"method": 'PUT',
+		"data": JSON.stringify(input_data),
+		"headers": {
+		    "Content-type": "application/json",
+		    "X-requested-with": " XMLHttpRequest"
+		}
+	}).then((xhr)=>{alert('Conversion complete'); return xhr;}, ()=>alert('Failed'));
+
+
+}
+
+function convert_todo(){
+
+	var id = $('#note-title').dataset.id;
+
+	var promise = $.fetch('/api/todos/'+id+'/convert', {
+		"method": 'PUT',
+		"data": null,
+		"headers": {
+		    "Content-type": "application/json",
+		    "X-requested-with": " XMLHttpRequest"
+		}
+	}).then((xhr)=>{alert('Conversion complete'); return xhr;}, ()=>alert('Failed'));
+}
+
+function convert_button_action(){
+	var id = $('#note-title').dataset.id;
+	var mode = $('#note-title').dataset.entity;
+
+	if (id <= 0) {
+		alert('It can\'t be converted, you might have recently pressed the New button');
+		return 0;
+	}
+
+	switch (mode){
+		case 'note':
+			var still_converting = $('#note-title').dataset.converting;
+			if (still_converting === "false") {
+				$('#todo-task-field').value = '';
+				$('#todo-target-field').value = '';
+				$('#todo-is-done-field').removeAttribute('checked');
+				notepad_mode('todo');
+				$('#note-title').dataset.converting = 'true';
+				$('#cancel-conversion-button').style.display = 'inline';
+			} else {
+				convert_note();
+				$('#note-title').dataset.converting = 'false';
+				$('#cancel-conversion-button').style.display = 'none';
+				load_todos_list_data();
+			}
+			break;
+		case 'todo':
+			var confirmed = confirm('Confirm conversion of this Todo?');
+			if (confirmed) {
+				convert_todo();
+				load_notes_list_data();
+			}
+	}
+}
+
+function cancel_conversion(){
+	notepad_mode('note');
+	$('#note-title').dataset.converting = 'true';
+	$('#cancel-conversion-button').style.display = 'none';
 }
