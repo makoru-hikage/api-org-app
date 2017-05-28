@@ -82,7 +82,6 @@ put '/api/todos/:id' => sub {
 	$id_value = route_parameters->{id};
 
 	my $request_body = from_json(request->body);
-	$response_body->{input_data}->{username} = $username;
 
 	my $todos = sub {
 		my ($schema, $input_data) = @_;

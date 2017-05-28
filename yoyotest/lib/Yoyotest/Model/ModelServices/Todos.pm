@@ -140,11 +140,11 @@ sub get_todos {
 		'as' => [
 			'note_id',
 			'task', 
-			'due_time', 
+			'target_datetime', 
 			'is_done',
 			'task_started',
 			'note_title',
-			'note_content',
+			'note_text',
 			'creation_time',
 			'username',
 		],
@@ -173,16 +173,24 @@ sub edit_todo {
 
 	my $todo_data = {  
 		task => $self->{input_data}->{task}, 
-		target_datetime => $self->{input_data}->{target_datetime}
+		target_datetime => $self->{input_data}->{target_datetime},
+		is_done => $self->{input_data}->{is_done}
 	};
 
-	my $note_data = { 
-		user_id => $self->{input_data}->{user_id}, 
+	my $note_data = {  
 		title => $self->{input_data}->{title}, 
 		content => $self->{input_data}->{content}
 	};
 
-	$self->{input_data}->{user_id} = $self->{user}->id;
+	foreach my $item (keys %$todo_data) {
+		delete $todo_data->{$item} unless (defined $todo_data->{$item});
+	}
+
+	foreach my $item (keys %$note_data) {
+		delete $note_data->{$item} unless (defined $note_data->{$item});
+	}
+
+
 
 	my $todo = $self
 		->{repository}
